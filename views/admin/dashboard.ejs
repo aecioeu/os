@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="pt-br" data-textdirection="ltr">
+  <%- include("partials/header") %>
+  <style>
+
+tbody, td, tfoot, th, thead, tr {
+    padding: 0px 15px !important;
+    border-width: 0 !important;
+}
+tr.odd, tr.evan{
+    border: none !important;
+    border-style: none !important;
+    border-color: inherit !important;
+
+    border-width: 0 !important;
+}
+
+  </style>
+
+   
+
+  <!-- BEGIN: Body-->
+
+  <body data-sidebar-size="default" data-layout-width="fluid" data-layout-menu-position="fixed" data-sidebar-color="light" data-sidebar-showuser="false" data-topbar-color="light">
+    <!-- Begin page -->
+    <div id="wrapper">
+
+     <%- include("partials/nav") %> 
+     <%- include("partials/menu") %> 
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <div class="container-fluid">
+                        
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Tarefas</h4>
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Dasboard</a></li>
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Tarefas Pendentes</a></li>
+                                     
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title -->  
+
+                    <!-- tasks panel -->
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <!-- cta -->
+                               
+
+                                        <div class="row mt-0">
+                                            <div class="col">
+                                              
+                                                <a href="/tasks/create" class="btn btn-success float-start">
+                                                    <i class="uil uil-plus me-1"></i> Tarefa
+                                                </a>
+
+                                                <table id="tarefas" class="table mt-1 table-centered">
+                                                    <thead>
+                                                      <tr>
+                                                        <th style="width: 100%"></th>
+                                                    
+                                                      </tr>
+                                                    </thead>
+                        
+                                                  </table>
+
+
+                                             
+
+                                             
+
+                                         
+                                            </div>
+                                        </div>
+
+                                        
+                                        <!-- end row -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+              
+                </div>
+                    
+                </div>
+            </div> <!-- content -->
+
+        </div>
+
+    <%- include('partials/footer') %> 
+    <script src="/js/dashboard.init.js"></script>
+
+    <script src="/js/jquery.dataTables.min.js"></script>
+
+
+    <script>
+    
+
+function priority(priority){
+    var text = ''
+    
+    if(priority == "Alta"){
+        text = 'danger'
+    }else if (priority == "Normal"){
+        text = 'success'
+    }else{
+        text = 'primary'
+    }
+
+
+    var tpl = `<span class="badge badge-soft-${text} p-1">${priority}</span>` 
+
+    return tpl
+}
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+    return false;
+};
+
+      var table_ = $('#tarefas').DataTable({
+     
+        ajax:{url:"/api/tasks/all?show=" + getUrlParameter('show'),dataSrc:""},
+        responsive: true,
+        ordering: false,
+        searching: true,
+        language: {
+            search : "",
+            emptyTable: '👋 Sem Mais Tarefas'
+            },
+        paging: false,
+        bInfo: false,
+        columns: [
+          {
+            "data": "name",
+            render: function(data, type, row) {
+              return `
+              
+              <a href="/tasks/edit/${row.task_id}" >
+                                                            <div class="card-task row justify-content-sm-between border-bottom">
+                                                                <div class="col-lg-8 mb-2 mb-lg-0">
+                                                                    <div class="">
+                                                                        <span class="location"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${row.location}</span></span>
+                                                                        
+                                                                        <h5 class="mt-1 mb-1"><span class="text-dark bold">${row.registration} - ${row.name}</span>
+                                                                        <br><span class="badge badge-soft-secondary mt-1">${row.role}</span> </h5>
+                                                                        <p class="text-muted mb-1 ml-2"><i class="uil uil-chat"></i>${row.description}</p>
+                                                                
+                                                                    </div>
+                                                                </div> <!-- end col -->
+                                                                <div class="col-lg-4">
+                                                                    <div class="d-sm-flex justify-content-between">
+                                                                        <div>
+                                                                         
+                                                                        </div>
+                                                                        <div class="mt-3 mt-sm-0">
+                                                                            <ul class="list-inline text-sm-end">
+
+
+                                                                              
+                                                                                <li class="list-inline-item text-dark">
+                                                                                    <i class="uil uil-clipboard-alt"></i> #${row.task_id} 
+                                                                                </li>
+                                                                                <li class="list-inline-item pe-1 text-dark">
+                                                                                    <i class="uil uil-schedule me-1 "></i>${moment(row.created_task).fromNow()}
+                                                                                </li>
+                                                                               
+                                                                                <li class="list-inline-item">
+                                                                                    ${priority(row.priority)                                                                             }
+                                                                                                                                            
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div> <!-- end .d-flex-->
+                                                                </div> <!-- end col -->
+                                                            </div>
+                                                        </a> <!-- end link task-->
+              
+              `;
+
+            }
+          },
+        ]
+      });
+
+      
+    $('input[type="search"]').attr('placeholder' , "Buscar")
+
+     
+      </script>
+
+
+
+    
+</body>
+  <!-- END: Body-->
+</html>

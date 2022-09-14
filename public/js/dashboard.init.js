@@ -410,7 +410,7 @@ function tplte(row) {
 
     return `<div class="col-xl-4 col-lg-6">
     <div class="card">
-        <a href="/tasks/edit/${row.task_id}" >
+        <a href="/tasks/view/${row.task_id}" >
         <div class="card-body">
             
             ${priority(row.priority)}

@@ -292,10 +292,10 @@ span[aria-expanded="true"]{
   background: #fff;
   border-right: 1px solid #e2e7f1;
   bottom: 0;
-  padding: 20px 0;
+  padding: 0px 0;
   position: fixed;
   transition: all 0.1s ease-out;
-  top: 70px;
+  top: 60px;
 }
 #sidebar-menu > ul {
   list-style: none;

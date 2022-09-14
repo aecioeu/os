@@ -3,778 +3,282 @@
 <html lang="pt-br" data-textdirection="ltr">
 <%- include("../partials/header") %>
 
-<!-- BEGIN: Body-->
-<style>
-  @media print {
-    .select2 {
-      display: none !important
-    }
 
-  }
-</style>
 
-<body data-sidebar-size="default" data-layout-width="fluid" data-layout-menu-position="fixed" data-sidebar-color="light" data-sidebar-showuser="false" data-topbar-color="light">
-  <!-- Begin page -->
-  <div id="wrapper">
+  <!-- BEGIN: Body-->
 
-    <%- include("../partials/nav") %>
-    <%- include("../partials/menu") %>
+  <body data-sidebar-size="default" data-layout-width="fluid" data-layout-menu-position="fixed"
+    data-sidebar-color="light" data-sidebar-showuser="false" data-topbar-color="light">
+    <!-- Begin page -->
+    <div id="wrapper">
 
-    <!-- ============================================================== -->
-    <!-- Start Page Content here -->
-    <!-- ============================================================== -->
-    <div class="content-page">
-      <div class="content">
+      <%- include("../partials/nav") %>
+        <%- include("../partials/menu") %>
 
-        <!-- Start Content-->
-        <div class="container-fluid">
+          <!-- ============================================================== -->
+          <!-- Start Page Content here -->
+          <!-- ============================================================== -->
 
-          <!-- start page title -->
-          <div class="row">
-            <div class="col-12">
-              <div class="page-title-box">
-                <h4 class="page-title">Tarefa #<%- data.task_id %>
-                </h4>
-                <div class="page-title-right">
-                  <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tarefas</a></li>
+          <div class="content-page">
+            <div class="content">
 
-                  </ol>
+              <div class="container-fluid">
+
+                <div class="col-xl-12">
+
+
+                  <!-- start page title -->
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="page-title-box">
+                        <h4 class="page-title">NOVA TAREFA NO CPD</h4>
+                        <div class="page-title-right">
+                          <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Dasboard</a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Nova Tarefa</a></li>
+
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- end page title -->
+
+                  <div class="row">
+                    <div class="col-xl-8 mb-md-0 mb-2">
+                      <div class="card">
+                        <div class="card-body">
+
+
+                        <!--  <h4 class="header-title mt-0">NOVA TAREFA NO CPD</h4>
+                          <p class="sub-header">
+                            Indique com o maximo de clareza o objetivo desta tarefa, descreva com <code>atençao</code> .
+                          </p>-->
+
+                          <form action="/tasks/create" method="post" class="parsley-examples">
+
+                          <div class="row custom-options-checkable mb-3">
+                            <div class="col-md-6 mb-md-0 mb-2">
+                              <input class="custom-option-item-check" id="out_Radio" type="radio"
+                                name="tipo" value="out" checked="">
+                              <label for="out_Radio" class="custom-option-item px-2 py-2">
+                                <span class="d-flex align-items-center mb-50">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-briefcase font-medium-4 me-50">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                  </svg>
+
+                                  <span class="custom-option-item-title h4 ml-1">Auxilio Usários ou Serviços</span>
+                                </span>
+                                <span class="d-block text-muted fs-12 mb-0 mt-1">Serviços prestrados externamente e
+                                  atividades prestadas fora do CPD.</span>
+                              </label>
+                            </div>
+                            <div class="col-md-6 mb-md-0 mb-2">
+                              <input class="custom-option-item-check" id="in_Radio" type="radio"
+                                name="tipo" value="in">
+                              <label for="in_Radio" class="custom-option-item px-2 py-2">
+                                <span class="d-flex align-items-center mb-50">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-home font-medium-4 me-50">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                  </svg>
+
+                                  <span class="custom-option-item-title h4 ml-1">Equipamento p/ Manutenção</span>
+                                </span>
+                                <span class="d-block text-dark text-muted fs-12 mb-0 mt-1">Recebimento de equipamentos
+                                  no CPD, para manutenções diversas.</span>
+                              </label>
+                            </div>
+
+                            <!--<div class="col-md-12 mb-md-0 mb-2 mt-2">
+                              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                Essa opção é importante pois o solicitante sera notificado via whatsapp da situação da
+                                tarefa.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                  aria-label="Close"></button>
+                              </div>
+
+
+                            </div>-->
+
+
+
+
+                          </div>
+
+
+                          <div class="mb-1 row">
+                            <div class="col-lg-8" >
+                            <label class="form-label" for="servidor">Solicitante</label>
+
+                          
+                              <select class="form-select" name="servidor" data-plugin="select_servidores">
+                              </select>
+
+                            </div>
+                            <div class="col-lg-4">
+
+                            <label class="form-label" for="example-helping">Contato</label>
+                          
+                              <input type="text" class="form-control" name="contato" id="contato" placeholder="" parsley-trigger="change" required >
+                              <span class="help-block">
+                                <small> Whatsapp para ser notificado</small>
+                              </span>
+                            </div>
+                        
+                          </div>
+
+                          <div class="mb-1 row">
+                            <div class="col-lg-12">
+                              <label class="form-label" for="destino">Local / Destino da Prestação de Serviço</label>
+                                 <textarea class="form-control" rows="2" name="destiny" id="destiny"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="mb-1 row">
+                            <div class="col-lg-12">
+                              <label class="form-label" for="destino">Descrição do Problema</label>
+                                 <textarea class="form-control" rows="2" name="problem" id="problem"></textarea>
+                            </div>
+                          </div>
+
+
+                          
+                                           
+                        
+                        
+                          <div class="mb-3 row">
+                          
+                            <div class="col-lg-12">
+                                <label class="form-label">Prioridade</label>
+                              <select class="form-select" name="priority">
+                                <option value="2">Normal</option>
+                                <option value="1">Alta</option>
+                                <option value="3">Baixa</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="row mb-0 justify-content-end">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-info">Continuar</button>
+                            </div>
+                        </div>
+
+                        </form>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
               </div>
-            </div>
+            </div> <!-- content -->
+
           </div>
-          <!-- end page title -->
 
-          <div class="row">
-            <div class="col-xl-8">
-              <div class="card">
+          <%- include('../partials/footer') %>
 
-                <div class="card-body">
+     <!-- Plugin js-->
+     <script src="/js/parsley.min.js"></script>
 
-                  <%if(assigned == false){%>
-                  <a href="/tasks/invite/<%-data.task_id-%>" class="alert btn btn-soft-danger d-block mb-2 bold">ASSUMIR ESTÁ TAREFA</a>
-        
-                  <%}%>
+            <script>
 
-                  <ul class="nav nav-pills navtab-bg nav-justified p-1" id="pills-tab" role="tablist">
+            $(document).ready(function() {
+                $('.parsley-examples').parsley();
+            });
 
-                    <li class="nav-item">
-                      <a class="nav-link active" id="pills-tasks-tab" data-bs-toggle="pill" href="#pills-tasks" role="tab" aria-ntrols="pills-tasks" aria-selected="false">
-                        Tarefa
-                      </a>
-                    </li>
-                  
+                    $(document).on('select2:open', () => {
+                        document.querySelector('.select2-search__field').focus();
+                    });
+    
 
-                    <li class="nav-item">
-                      <a class="nav-link " id="pills-notes-tab" data-bs-toggle="pill" href="#pills-notes" role="tab" aria-controls="pills-notes" aria-selected="true">
-                        Notas
-                      </a>
-                    </li>
+              $('[data-plugin="select_servidores"]').select2({
+                ajax: {
+                  url: '/api/servidores/search?',
+                  dataType: 'json',
+                  data: function (params) {
+                    var query = {
+                      term: params.term
+                    }
 
-                    <li class="nav-item">
-                      <a class="nav-link " id="pills-activity-tab" data-bs-toggle="pill" href="#pills-activity" role="tab" aria-controls="pills-activity" aria-selected="true">
-                        Atividade
-                      </a>
-                    </li>
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                  },
+                  type: "GET",
+                  placeholder: "Buscar ...",
+                  minimumInputLength: 3,
+             
+                  processResults: function (data) {
+                    return {
+                      results: data
+                    };
+                  },
+                },
+                templateResult: formatRepo,
+                templateSelection: function (data) {
+                    if (!data.id) {
+                      return data.text;
+                    }
+                    return $(`<span>${data.registration} - ${data.name}</span>`);
+                  },
+              })
 
-                 
-                  </ul>
+              .on('select2:open', function (e) {
+                document.querySelector('.select2-search__field').focus();
+              })
 
-                  <div class="tab-content" id="pills-tabContent">
 
+              .on('select2:select', function (e) {
+                  var data = e.params.data;
+                  console.log(data);
+                  $("#destiny").text(data.location)
+                   $("#contato").val(data.phone)
+              });
 
               
-                    <div class="tab-pane fade active show" id="pills-tasks" role="tabpanel" aria-labelledby="pills-tasks-tab">
-
-
-
-                      <div class="row">
-                        <div class="col-sm-8 border-right">
-                          <!--  <h3 class="mt-1 logo-lg-text-dark"><img src="/img/logo-sm.svg" alt height="24"> CPD</h3>
-                                <small class="mt-1">
-                                  Av. Joaquim Gomes Pererira, 823<br>
-                                  Centro, Lagoa da Prata<br>
-                                  Contato: (37) 3262 5903
-                                </small>-->
-
-                          <div class="badge bg-success float-end">Notificar via Whatsapp</div>
-
-                          <span class="fs-17 mt-2 mb-1 bold"><i class="uil uil-chat-bubble-user"></i>
-                            SOLICITANTE</span>
-
-                          <div class="task-box mb-1">
-
-                            <p class="text-muted mb-0">
-                              <%-data.registration%> - <%-data.name%> <span class="text-dark">(<%- data.phone %>)</span>
-                            </p>
-                            <p class="text-muted text-truncate mb-0"><span class="badge badge-soft-secondary mt-1">
-                                <%-data.role%>
-                              </span></p>
-
-                          </div>
-
-
-                        </div> <!-- end col -->
-
-                        <div class="col-sm-4">
-
-                          <%if(data.status == "new") { %>
-                            <div class="badge bg-dark">TAREFA ABERTA</div>
-                            <%}%>
-                            <%if(data.status == "pendding") { %>
-                              <div class="badge bg-dark">TAREFA EM ANDAMENTO</div>
-                              <%}%>
-
-                            <%if(data.status == "complete") { %>
-                              <div class="badge bg-dark">TAREFA CONCLUIDA</div>
-                              <%}%>
-
-
-                         
-
-
-                             
-                 
-                          <div class="text-md-start">
-                          
-                            <h4 class="bold">
-                              <i class="uil uil-clipboard-alt"></i>
-                              <%-data.task_id-%>
-                            </h4>
-                          
-
-                           
-                            <span class="text-muted">
-                              ⏱️
-                              <span class="created" time="<%-data.created_task%>"></span>
-                              
-                          <%if(data.priority == "2") { %>
-                            <div class="badge bg-success float-end"><i class="uil uil-stopwatch"></i>Prioridade Normal</div>
-                            <%}%>
-                            <%if(data.priority == "3") { %>
-                              <div class="badge bg-primary float-end"><i class="uil uil-stopwatch"></i>Prioridade Baixa</div>
-                              <%}%>
-
-                            <%if(data.priority == "1") { %>
-                              <div class="badge bg-danger float-end"><i class="uil uil-stopwatch"></i>Prioridade Alta</div>
-                              <%}%>
-
-                            </span>
-                          </div>
-                        </div> <!-- end col -->
-                        <hr class="mt-2 m-2">
-                      </div>
-
-
-                      <div class="row">
-                        <div class="col-sm-7 border-right">
-
-                          <div class="">
-
-
-                            <span class="fs-17 mt-2 mb-1 bold"><i class="uil uil-comment-question text-dark"></i>
-                              PROBLEMA / RELATO</span>
-                            <br>
-
-                            <div class="task-box mb-0">
-                              <p class="text-muted mb-0">
-                                <%-data.description%>
-                              </p>
-                            </div>
-
-
-
-                          </div>
-
-
-
-                        </div>
-                        <div class="col-sm-5">
-
-                          <span class="fs-17 mt-2 mb-1 bold"><i class="uil uil-map-pin-alt text-dark"></i>
-                            LOCAL</span>
-                          <div class="task-box mb-2">
-                            <p class="text-muted text-truncate mb-0">
-                              <%-data.location%>
-                            </p>
-                          </div>
-
-                        </div>
-
-                      </div>
-
-
-                      <%if(task_tecnico.length >0){%>
-                        
-                        <div class="row">
-                          <div class="col-md-12">
-                            <hr class="mt-2 mb-2">
-                            <span class="fs-12 mt-2 mb-1 bold">
-                              Técnicos:
-                            
-                            </span>
-
-                            <% task_tecnico.forEach((tecnico, index) => { %>
-                              <span class="badge badge-soft-secondary"><%-tecnico.name%></span>
-                            <%})%>
-  
-                       
-                             
-  
-                          </div> <!-- end col -->
-                          <hr class="mt-2 m-2">
-  
-  
-  
-                        </div>
-                     
-
-                        <%}%>
-
-                  
-
-
-                  
-
-
-                      <!-- end row -->
-                      <div class="mb-1 row">
-                        <div class="col-lg-12">
-                          <h5 class="mt-2 bold">PATRIMONIO VINCULADO</h5>
-
-
-
-                          <select class="form-select" name="servidor" data-plugin="select_patrimonio">
-                          </select>
-
-                        </div>
-
-
-                      </div>
-
-                      <div class="row">
-                        <div class="col-12">
-
-
-
-                          <table id="patrimonio_vinculado" class="table mt-1 table-centered">
-                            <thead>
-                              <tr>
-                                <th style="width: 10%">Plaqueta</th>
-                                <th>Descricao do Patrimonio</th>
-                                <!-- <th style="width: 10%">Hours</th>
-                                                                    <th style="width: 10%">Hours Rate</th>
-                                                                    <th style="width: 10%" class="text-end">Total</th>-->
-                              </tr>
-                            </thead>
-
-                          </table>
-
-                        </div> <!-- end col -->
-                      </div>
-                      <!-- end row -->
-
-                     
-
-                      <div class="mt-3 mb-1">
-                        <div class="text-end d-print-none">
-                          <a href="javascript:window.print()" class="btn btn-primary">
-                            <i class="uil uil-print me-1"></i> Imprimir Tarefa</a>
-                            <%if(assigned == true && data.status != "complete"){%>
-                          <a href="/tasks/complete/<%-data.task_id-%>" class="btn btn-danger">Finalizar Tarefa</a>
-                          <%}%>
-                        </div>
-                      </div>
-
-
-                    </div>
-
-         
-
-                    
-                    <div class="tab-pane fade" id="pills-notes" role="tabpanel" aria-labelledby="pills-notes-tab">
-                      <h4 class="header-title mb-1">NOTAS</h4>
-
-                      <%if(data.status != "complete"){%>
-
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <div class="clearfix pt-2">
-                             
-  
-                              <form action="#" id="notes" method="POST" class="comment-area-box">
-                                
-                                <div class="d-flex">
-                                <div class="me-3 flex-shrink-0">
-                                      <a href="#"> 
-                                          <img class="d-flex-object rounded-circle avatar-sm" alt="" src="/img/profile/<%-user.profile%>"> 
-                                      </a>
-                                  </div>
-
-                                  <div class="flex-grow-1">
-                               
-                                    <textarea rows="2" id="description" class="form-control border-0 resize-none" placeholder="Nota pertinentes a Tarefa ..."></textarea>
-                                    <div class="p-2 bg-light blight-border">
-                                      <div class="float-end">
-                                        <button type="submit" id="sendnotes" class="btn btn-sm btn-success">
-                                          Enviar como <%-user.name%> <i class="uil uil-message ml-1"></i>
-                                        </button>
-                                      </div>
-                                      <div>
-                                       <a href="#" class="btn btn-sm px-1 btn-light">
-                                          <i class="uil uil-cloud-upload"></i>
-                                        </a>
-                                        <!--<a href="#" class="btn btn-sm px-1 btn-light">
-                                          <i class="uil uil-at"></i>
-                                        </a>-->
-                                      </div>
-                                    </div>
-                               
-                                  </div>
-                                </div>
-
-
-                               
-                              </form>
-  
-                              <!-- <small class="text-muted">
-                                          All accounts are to be paid within 7 days from receipt of
-                                          invoice. To be paid by cheque or credit card or direct payment
-                                          online. If account is not paid within 7 days the credits details
-                                          supplied as confirmation of work undertaken will be charged the
-                                          agreed quoted fee noted above.
-                                        </small>-->
-                            </div>
-                          </div> <!-- end col -->
-  
-                        </div>
-                        <!-- end row -->
-                        <%}%>
-                      <%if(assigned == "unknow"){%>
-                         
-                        
-                          <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                          <%-user.name%>, você não pode adicionar nenhuma nota a está tarefa.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>
-
-                    <%}%>
-
-                    <%if(data.status == "complete"){%>
-                         
-                        
-                      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%-user.name%>, não é possivel adicionar notas pois está tarefa já foi concluida.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
-
-                <%}%>
 
 
              
-               
-                         
-
-                            <div class="chat-conversation">
-                              <ul class="conversation-list notes">
-                                     
-                                <li class="position-relative">
-                                  <hr>
-                                  <h4><span class="badge bg-light text-dark position-absolute top-0 start-50 translate-middle">Hoje</span></h4>
-                                </li>
-
-                              </ul>
-
-                
-
-                  </div>
-
-                </div>
-
-                <div class="tab-pane fade " id="pills-activity" role="tabpanel" aria-labelledby="pills-activity-tab">
-                  <h4 class="header-title mb-4">ATIVIDADES</h4>
-                  <div class="left-timeline mt-3 mb-3 ps-3">
-                    <ul class="list-unstyled events mb-0 history">
-
-
-
-                    </ul>
-                  </div>
-
-                </div>
-
-
-              </div>
-            </div> <!-- end col -->
-
-
-          </div>
-          <!-- end row -->
-
-        </div> <!-- container -->
-
-      </div> <!-- content -->
-
-
-
-    </div>
-
-    <%- include('../partials/footer') %>
-
-    <script src="/js/jquery.dataTables.min.js"></script>
-
-
-    <script>
-      var table_ = $('#patrimonio_vinculado').DataTable({
-        ajax: "/api/tasks/patrimonio/<%- data.task_id %>",
-        responsive: true,
-        ordering: false,
-        searching: false,
-        language: {
-        emptyTable: "Nenhum patrimônio vinculado."
-    },
-        paging: false,
-        bInfo: false,
-        columns: [{
-            "data": "registration",
-            render: function(data, type, row) {
-              return `<h6 class="fs-16 mt-0 mb-1">${row.registration}</h6><label class="badge badge-soft-primary">${row.situacao}</label>`;
-            }
-          },
-          {
-            "data": "name",
-            render: function(data, type, row) {
-              return `
-                            <div class="dropdown align-self-center float-end">
-                                            <a href="#" class="dropdown-toggle arrow-none text-muted" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="uil uil-ellipsis-v"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-end" style="">
-                                              
-                                                <a href="javascript:void(0);" onclick="deletePatrimonio('${row.id}', '<%- data.task_id %>')" class="dropdown-item text-danger">
-                                                    <i class="uil uil-trash me-2"></i>Apagar
-                                                </a>
-                                            </div>
-                                        </div>
-                            <h6 class="fs-15 mt-0 mb-1">${row.name} </h6>
-                            <p class="text-muted fs-12"><i class="uil uil-map-pin-alt text-dark"></i>${row.centro_custo}</p>
-                       
-                            `;
-
-            }
-          },
-        ]
-      });
-
-
-
-
-      $(document).on('select2:open', () => {
-        document.querySelector('.select2-search__field').focus();
-      });
-
-
-      HistoryLoad('<%- data.task_id %>')
-      NotesLoad('<%- data.task_id %>')
-      
-
-
-      /*PATRIMONIO*/
-
-
-      $('[data-plugin="select_patrimonio"]').select2({
-          ajax: {
-            url: '/api/patrimonio/search?',
-            dataType: 'json',
-            type: "GET",
-            placeholder: "Buscar ...",
-            minimumInputLength: 3,
-            processResults: function(data) {
-              return {
-                results: data
-              };
-            },
-          },
-          templateResult: formatRepo,
-          templateSelection: function(data) {
-            if (!data.id) {
-              return data.text;
-            }
-            return $(`<span>${data.registration} - ${data.name}</span>`);
-          },
-        })
-
-        .on('select2:open', function(e) {
-          document.querySelector('.select2-search__field').focus();
-        })
-
-
-        .on('select2:select', function(e) {
-          var data = e.params.data;
-          console.log(data);
-
-          data.task_id = '<%- data.task_id %>'
-
-          $.ajax({
-            url: "/tasks/create/patrimonio",
-            type: "post",
-            data: data,
-            success: function(response) {
-
-              $('#patrimonio_vinculado').DataTable().ajax.reload();
-              console.log("Carregando o Patrimonio vinculado")
-              $('[data-plugin="select_patrimonio"]').select2("val", "");
-
-              HistoryLoad('<%- data.task_id %>')
-
-              // You will get response from your PHP page (what you echo or print)
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-              console.log(textStatus, errorThrown);
-            }
-          });
-
-
-        });
-
-
-      function formatRepo(data) {
-
-        //console.log(data)
-        if (data.loading) {
-          return data.text;
-        }
-
-        $("#destiny").text(data.location)
-        $("#contato").val(data.phone)
-
-        var $tpl = $(`
-            <div class="p-1">
-                <span class="location"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${data.centro_custo}</span></span>
-                <h5 class="mt-1 mb-1"><span class="text-dark bold repository__name">${data.registration} ${data.name}</span>
-                <br><span class="badge badge-soft-secondary mt-1">${data.situacao}</span> </h5>                                   
-            </div>
-    `)
-
-
-
-        return $tpl;
-      }
-
-
-
-
-      function TplHistory(data){
-        $(".history li").remove()
-          data.forEach(function(item, index) {
             
-            $(".history").append(
-              `   <li class="event-list">
-                          <div class="pb-4">
-                            <div class="d-flex">
-                              <div class="event-date text-center me-4 flex-shrink-0">
-                                <div class="bg-soft-primary p-1 rounded text-primary fs-14 created" time="${item.created}"></div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="fs-15 mt-0 mb-1">
-                                  ${item.title}
-                                </h6>
-                                <p class="text-muted fs-14">
-                                  ${item.description}
-                                </p>
-                              </div>
+
+
+
+
+              function formatRepo(data) {
+
+                //console.log(data)
+                if (data.loading) {
+                  return data.text;
+                }
+
+          
+
+                var $tpl = $(`
+                            <div class="p-1">
+                                <span class="location"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${data.location}</span></span>
+                                <h5 class="mt-1 mb-1"><span class="text-dark bold repository__name">${data.registration} ${data.name}</span>
+                                <br><span class="badge badge-soft-secondary mt-1">${data.role}</span> </h5>                                   
                             </div>
-                          </div>
-                        </li>`
-            );
-          });
+                    `)
 
-}
+          
 
-function Tplnotes(data){
-  
-        $(".notes li").remove()
-          data.forEach(function(item, index) {
-
-            console.log(moment(item.date).fromNow())
-
-
-            $('.notes').append(`<li class="position-relative">
-                                                    <hr>
-                                                    <h4><span class="badge bg-light text-dark position-absolute top-0 start-50 translate-middle">${item.date}</span></h4>
-                                                </li>`)
-
-
-
-            item.notes.forEach(function(notes, index2) {
-
-              $(".notes").append(
-              ` <li class="clearfix">
-                                            <div class="chat-avatar">
-                                                <img src="/img/profile/${notes.profile}" alt="user">
-                                                <i>${moment(notes.created).format('hh:mm')}</i>
-                                                
-                                            </div>
-                                            <div class="conversation-text">
-                                                <div class="ctext-wrap">
-                                                    <i class="fs-15">${notes.tecnico_name}</i>
-                                                    <p class="fs-14">${notes.description}</p>
-                                                </div>
-                                                
-                                                
-                                            </div>
-                </li>`
-            );
-            
-            })
-
-            /*
-
-
-
-            
-            */
-          });
-
-}
-
-      function HistoryLoad(task_id) {
-        $.ajax({
-          type: "GET",
-          url: `/api/tasks/history/${task_id}`,
-          // dataType: "json", 
-          //contentType: "application/json; charset=utf-8",
-          success: function(response) {
-            TplHistory(response)
-            timeFromNow()
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-      }
-
-      function NotesLoad(task_id) {
-        $.ajax({
-          type: "GET",
-          url: `/api/tasks/notes/${task_id}`,
-          // dataType: "json", 
-          //contentType: "application/json; charset=utf-8",
-          success: function(response) {
-
-           if(response) Tplnotes(response)
-            //TplHistory(response)
-          //  timeFromNow()
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-      }
-
-
-
-      $("#notes").submit(function(e) {
-        e.preventDefault();
-
-           
-        var data = {
-          task_id: '<%- data.task_id %>',
-          description: $("textarea#description").val()
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/tasks/note`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-
-            if(response.status == 'added'){
-              //alert("Nota inserida.")
-              $("textarea#description").val('')
-              NotesLoad('<%- data.task_id %>')
-            }
-
-            
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
+                return $tpl;
+              }
 
 
 
 
+            </script>
 
-    })
-
-
-      function timeFromNow() {
-        $('[time]').each(function(i, obj) {
-
-          $(this).text(moment($(this).attr("time")).fromNow())
-
-        });
-      }
-
-      timeFromNow()
-
-      setInterval(() => {
-        timeFromNow()
-      }, 1000);
-
-
-
-
-      function deletePatrimonio(id_patrimonio, task_id) {
-
-        var data = {
-          id: id_patrimonio,
-          task_id: task_id
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/api/patrimonio/delete`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-            $('#patrimonio_vinculado').DataTable().ajax.reload();
-            HistoryLoad('<%- data.task_id %>')
-
-            //Se a solicitação for feita com sucesso, a resposta representará os dados
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-      }
-    </script>
-
-
-
-</body>
-<!-- END: Body-->
+  </body>
+  <!-- END: Body-->
 
 </html>

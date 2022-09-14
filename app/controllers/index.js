@@ -44,8 +44,8 @@ router.post(
 
 
 
-router.get("/dashboard", isLoggedIn, async function (req, res, next) {
-  res.render("admin/dashboard.ejs", {
+router.get("/tasks", isLoggedIn, async function (req, res, next) {
+  res.render("admin/tasks.ejs", {
     user : req.user
   });
 });

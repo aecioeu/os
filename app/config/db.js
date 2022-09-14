@@ -11,7 +11,8 @@ const getTask = async (data) => {
   tasks.created as created_task
   From
   tasks Inner Join
-  servidores On servidores.id = tasks.id_servidor WHERE status = ? AND task_id LIKE ? AND (tasks.created BETWEEN ? AND ?) ORDER BY tasks.priority ASC, tasks.created DESC`, 
+  servidores On servidores.id = tasks.id_servidor 
+  WHERE status = ? AND task_id LIKE ? AND (tasks.created BETWEEN ? AND ?) ORDER BY tasks.priority ASC, tasks.created DESC`, 
   [data.show, `%${data.term}%`, data.start, data.end]);
  
   if (rows.length > 0) return rows;

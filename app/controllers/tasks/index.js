@@ -73,7 +73,7 @@ await pool.query("INSERT INTO tasks SET ?", data, function (err, result) {
 
   db.insertHistory("task", `Tarefa Criada por ${req.user.name} em ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , ``, req.user.id, task_id)
 
-  res.redirect('/tasks/edit/' + task_id);
+  res.redirect('/tasks/view/' + task_id);
 });
 })
 
@@ -137,7 +137,7 @@ await pool.query("INSERT INTO task_tecnico SET ?", tecnico, function (err, resul
   
       //atualizar o servidor como o telefone
       db.insertHistory("task", `${req.user.name} assumiu a tarefa ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , ``, req.user.id, task_id)
-      res.redirect('/tasks/edit/' + task_id);
+      res.redirect('/tasks/view/' + task_id);
 });
   
 
@@ -173,9 +173,38 @@ router.get('/complete/:task_id', isLoggedIn, async function (req, res) {
   );
 
   db.insertHistory("task", `${req.user.name} concluiu a tarefa ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , ``, req.user.id, task_id)
-  res.redirect('/tasks/edit/' + task_id);
+  res.redirect('/tasks/view/' + task_id);
 
 }
+
+})
+
+
+router.get('/view/:task_id', async function (req, res) {
+  //res.send('Service home page');
+  const task_id = req.params.task_id
+  const data = await db.getTaskData(task_id)
+  const taskHistory = await db.getTaskHistory(task_id)
+  const taskTecnico = await db.getTasktecnicos(task_id)
+
+
+  var assingned = false
+  if(taskTecnico){
+
+    var tecnico_assingned = taskTecnico.map(el => el.id_tecnico);
+    assingned = tecnico_assingned.includes(req.user.id.toString())
+   
+  }
+
+  res.render('admin/tasks/view.ejs', {
+     user : req.user, 
+     data: data[0],
+     task_history : taskHistory,
+     task_tecnico: taskTecnico,
+     assigned : assingned
+    }
+  
+  );
 
 })
 
@@ -207,6 +236,7 @@ router.get('/edit/:task_id', async function (req, res) {
   );
 
 })
+
 
 
 

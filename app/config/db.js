@@ -2,16 +2,17 @@
 var pool = require("../config/pool-factory");
 
 
-const getTask = async (status) => {
+const getTask = async (data) => {
 
-  if(status == 'false') status = 'new'
+  if(data.show == 'false') data.show = 'new'
 
   let rows = await pool.query(`Select
   *,
   tasks.created as created_task
   From
   tasks Inner Join
-  servidores On servidores.id = tasks.id_servidor WHERE status = ? ORDER BY tasks.created DESC`, [status]);
+  servidores On servidores.id = tasks.id_servidor WHERE status = ? AND task_id LIKE ? AND (tasks.created BETWEEN ? AND ?) ORDER BY tasks.priority ASC, tasks.created DESC`, 
+  [data.show, `%${data.term}%`, data.start, data.end]);
  
   if (rows.length > 0) return rows;
   return false;
@@ -91,10 +92,20 @@ const getTaskData = async (task_id) => {
 
   const getNotesHistory = async (task_id) => {
 
-    let rows = await pool.query(`SELECT * FROM task_notes WHERE task_id = ? ORDER BY created DESC`, [task_id]);
+
+   
+
+
+
+    let rows = await pool.query(`Select *
+    From
+    task_notes Inner Join
+    tecnicos On tecnicos.id = task_notes.id_tecnicos WHERE task_notes.task_id = ? ORDER BY task_notes.created DESC`, [task_id]);
     if (rows.length > 0) {
 
     const data = rows
+
+    console.log
     // this gives an object with dates as keys
     const groups = data.reduce((groups, game) => {
     

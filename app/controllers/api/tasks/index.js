@@ -11,16 +11,28 @@ var pool = require("../../../config/pool-factory");
 // Estrutura /API/Tasks
 
 
-router.get('/all', async function (req, res) {
+router.post('/all', async function (req, res) {
 
- var show = req.query.show
- var rows = await db.getTask((show))
+
+  const dados = req.body
+  var data = {
+    show: req.body.show,
+    start: moment(req.body.start).format("YYYY-MM-DD 00:00:00"),
+    end: moment(req.body.end).format("YYYY-MM-DD 23:59:59"),
+    term: req.body.term
+  };
+
+  console.log(data)
+
+ var rows = await db.getTask((data))
  res.json(rows);
 
 })
 
 
 router.get('/patrimonio/:task_id', async function (req, res) {
+
+
 
   const task_id = req.params.task_id
   let rows = await pool.query("SELECT * FROM task_patrimonio WHERE task_id = ?", [task_id]);

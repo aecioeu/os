@@ -45,7 +45,9 @@ router.post(
 
 
 router.get("/dashboard", isLoggedIn, async function (req, res, next) {
-  res.render("admin/dashboard.ejs");
+  res.render("admin/dashboard.ejs", {
+    user : req.user
+  });
 });
 
 module.exports = router;

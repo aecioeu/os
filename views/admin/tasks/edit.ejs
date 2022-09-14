@@ -54,7 +54,7 @@
                 <div class="card-body">
 
                   <%if(assigned == false){%>
-                  <a href="/tasks/invite/<%-data.task_id-%>" class="alert btn btn-soft-dark d-block mb-2 bold">ASSUMIR ESTÁ TAREFA</a>
+                  <a href="/tasks/invite/<%-data.task_id-%>" class="alert btn btn-soft-danger d-block mb-2 bold">ASSUMIR ESTÁ TAREFA</a>
         
                   <%}%>
 
@@ -150,14 +150,14 @@
                               ⏱️
                               <span class="created" time="<%-data.created_task%>"></span>
                               
-                          <%if(data.priority == "Normal") { %>
+                          <%if(data.priority == "2") { %>
                             <div class="badge bg-success float-end"><i class="uil uil-stopwatch"></i>Prioridade Normal</div>
                             <%}%>
-                            <%if(data.priority == "Baixa") { %>
+                            <%if(data.priority == "3") { %>
                               <div class="badge bg-primary float-end"><i class="uil uil-stopwatch"></i>Prioridade Baixa</div>
                               <%}%>
 
-                            <%if(data.priority == "Alta") { %>
+                            <%if(data.priority == "1") { %>
                               <div class="badge bg-danger float-end"><i class="uil uil-stopwatch"></i>Prioridade Alta</div>
                               <%}%>
 
@@ -297,7 +297,7 @@
                     <div class="tab-pane fade" id="pills-notes" role="tabpanel" aria-labelledby="pills-notes-tab">
                       <h4 class="header-title mb-1">NOTAS</h4>
 
-                      <%if(assigned == true && data.status != "complete"){%>
+                      <%if(data.status != "complete"){%>
 
                         <div class="row">
                           <div class="col-sm-12">
@@ -305,22 +305,38 @@
                              
   
                               <form action="#" id="notes" method="POST" class="comment-area-box">
-                                <textarea rows="3" id="description" class="form-control border-0 resize-none" placeholder="Nota sobre andamento da Tarefa ..."></textarea>
-                                <div class="p-2 bg-light blight-border">
-                                  <div class="float-end">
-                                    <button type="submit" id="sendnotes" class="btn btn-sm btn-success">
-                                      Enviar como <%-user.name%> <i class="uil uil-message ml-1"></i>
-                                    </button>
+                                
+                                <div class="d-flex">
+                                <div class="me-3 flex-shrink-0">
+                                      <a href="#"> 
+                                          <img class="d-flex-object rounded-circle avatar-sm" alt="" src="/img/profile/<%-user.profile%>"> 
+                                      </a>
                                   </div>
-                                  <div>
-                                   <a href="#" class="btn btn-sm px-1 btn-light">
-                                      <i class="uil uil-cloud-upload"></i>
-                                    </a>
-                                    <!--<a href="#" class="btn btn-sm px-1 btn-light">
-                                      <i class="uil uil-at"></i>
-                                    </a>-->
+
+                                  <div class="flex-grow-1">
+                               
+                                    <textarea rows="2" id="description" class="form-control border-0 resize-none" placeholder="Nota pertinentes a Tarefa ..."></textarea>
+                                    <div class="p-2 bg-light blight-border">
+                                      <div class="float-end">
+                                        <button type="submit" id="sendnotes" class="btn btn-sm btn-success">
+                                          Enviar como <%-user.name%> <i class="uil uil-message ml-1"></i>
+                                        </button>
+                                      </div>
+                                      <div>
+                                       <a href="#" class="btn btn-sm px-1 btn-light">
+                                          <i class="uil uil-cloud-upload"></i>
+                                        </a>
+                                        <!--<a href="#" class="btn btn-sm px-1 btn-light">
+                                          <i class="uil uil-at"></i>
+                                        </a>-->
+                                      </div>
+                                    </div>
+                               
                                   </div>
                                 </div>
+
+
+                               
                               </form>
   
                               <!-- <small class="text-muted">
@@ -336,7 +352,7 @@
                         </div>
                         <!-- end row -->
                         <%}%>
-                      <%if(assigned == false){%>
+                      <%if(assigned == "unknow"){%>
                          
                         
                           <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -597,7 +613,7 @@ function Tplnotes(data){
               $(".notes").append(
               ` <li class="clearfix">
                                             <div class="chat-avatar">
-                                                <img src="/img/aecio.jpg" alt="user">
+                                                <img src="/img/profile/${notes.profile}" alt="user">
                                                 <i>${moment(notes.created).format('hh:mm')}</i>
                                                 
                                             </div>

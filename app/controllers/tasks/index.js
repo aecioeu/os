@@ -35,7 +35,7 @@ router.get('/count', isLoggedIn, async function (req, res) {
 
 router.get('/create', isLoggedIn, function (req, res) {
   //res.send('Service home page');
-  res.render("admin/tasks/create.ejs");
+  res.render("admin/tasks/create.ejs", { user : req.user});
 
 })
 

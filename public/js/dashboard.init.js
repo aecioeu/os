@@ -1,12 +1,6 @@
 
-/*
-Template Name: Shreyu - Responsive Bootstrap 5 Admin Dashboard
-Author: CoderThemes
-Website: https://coderthemes.com/
-Contact: support@coderthemes.com
-File: Dashboard init js
-*/
 
+/*
 
 !function($) {
     "use strict";
@@ -232,7 +226,7 @@ function ($) {
 
         chart.render();
 
-        /* ------------- target */
+
         var options = {
             chart: {
                 height: 349,
@@ -376,3 +370,163 @@ function ($) {
     "use strict";
     $.Dashboard.init();
 }(window.jQuery);
+*/
+
+
+
+
+function priority(priority) {
+
+    if (priority == "1") {
+        text = ['danger', 'Alta']
+    } else if (priority == "2") {
+        text = ['success', 'Normal']
+
+    } else {
+        text = ['primary', 'Baixa']
+    }
+    var tpl = `<div class="badge bg-${text[0]} float-end">Prioridade ${text[1]}</div>`
+    return tpl
+}
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+    return false;
+
+};
+
+
+function tplte(row) {
+
+    return `<div class="col-xl-4 col-lg-6">
+    <div class="card">
+        <a href="/tasks/edit/${row.task_id}" >
+        <div class="card-body">
+            
+            ${priority(row.priority)}
+        
+            <p class="text-success text-uppercase  mb-2"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${row.location}</span></p>
+            <h5 class="mt-1 mb-1"><span class="text-dark fs-17">${row.registration} - ${row.name}</span></h5>
+            <span class="badge badge-soft-secondary mt-1">${row.role}</span> </h5>
+            <p class="text-muted mb-1 mt-2  ">${row.description}</p>
+         
+        </div>
+        <div class="card-body border-top">
+            <div class="row align-items-center">
+                <div class="col-sm-auto">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item pe-2">
+                            <span class="text-muted d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Due date">
+                                <i class="uil uil-calender me-1"></i> ${moment(row.created_task).fromNow()}
+                            </span>
+                        </li>
+                       
+                        <li class="list-inline-item">
+                            <span class="text-muted d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Comments">
+                                <i class="uil uil-clipboard-alt"></i> #${row.task_id} 
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col offset-sm-1">
+                    
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+    <!-- end card -->
+</div>`
+
+}
+
+function showTasks(data){
+
+    $('.load').hide()
+
+        if(data){
+
+            var tpl = ""
+            data.forEach(function (row, index) {
+                tpl += tplte(row)
+            })
+        
+            $(".tarefas").empty().append(tpl)
+
+        }else{
+
+            $(".tarefas").empty().append('Não há tarefas.')
+        }
+
+   
+ 
+
+}
+
+
+
+function initTasks(date){
+    $(".tarefas").empty()
+
+    var data = {
+        show: getUrlParameter('show'),
+        start: date[0],
+        end:date[1],
+        term: $('#busca').val()
+      }
+
+    $.ajax({
+        type: "POST",
+        url: `/api/tasks/all`,
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(data),
+        success: function (data) {
+            showTasks(data)
+        },
+        error: function (errMsg) {
+            alert(errMsg);
+        }
+    
+    })
+
+
+}
+
+
+
+$('#busca').on("input", function() {
+   
+    var dInput = this.value;
+    console.log(dInput);
+
+    initTasks(flatpickr.selectedDates)
+    //$(".dDimension:contains('" + dInput + "')").css("display","block");
+
+});
+
+    const flatpickr = $('#range-datepicker').flatpickr({
+        locale: "pt",
+        mode: "range",
+        dateFormat: "d/m/Y",
+        defaultDate : [moment(new Date()).subtract(7, 'days').format("DD/MM/YYYY"), moment(new Date()).format("DD/MM/YYYY")],
+        onChange: function(selectedDates, dateStr, instance) {
+            initTasks(selectedDates)
+        },
+        onReady: function(selectedDates, dateStr, instance) {
+         console.log(selectedDates[0],selectedDates[1])
+
+        initTasks(selectedDates)
+        },
+         
+    });

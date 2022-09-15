@@ -101,15 +101,15 @@
 
                           <div class="badge bg-success float-end">Notificar via Whatsapp</div>
 
-                          <span class="fs-17 mt-2 mb-1 bold"><i class="uil uil-chat-bubble-user"></i>
+                          <span class="fs-13 mt-2 mb-1">
                             SOLICITANTE</span>
 
                           <div class="task-box mb-1">
 
-                            <p class="text-muted mb-0">
+                            <h5 class="text-dark fs-17 mb-0">
                               <%-data.registration%> - <%-data.name%> <span class="text-dark">(<%- data.phone %>)</span>
-                            </p>
-                            <p class="text-muted text-truncate mb-0"><span class="badge badge-soft-secondary mt-1">
+                            </h5>
+                            <p class="text-dark text-truncate mb-0"><span class="badge badge-soft-secondary mt-1">
                                 <%-data.role%>
                               </span></p>
 
@@ -174,12 +174,12 @@
                           <div class="">
 
 
-                            <span class="fs-17 mt-2 mb-1 bold"><i class="uil uil-comment-question text-dark"></i>
-                              PROBLEMA / RELATO</span>
+                            <span class="fs-13 mt-2 mb-1 ">
+                              PROBLEMA RELATADO</span>
                             <br>
 
                             <div class="task-box mb-0">
-                              <p class="text-muted mb-0">
+                              <p class="text-dark mb-0 fs-16">
                                 <%-data.description%>
                               </p>
                             </div>
@@ -193,10 +193,10 @@
                         </div>
                         <div class="col-sm-5">
 
-                          <span class="fs-17 mt-2 mb-1 bold"><i class="uil uil-map-pin-alt text-dark"></i>
+                          <span class="fs-13 mt-2 mb-1 "><i class="uil uil-map-pin-alt text-dark"></i>
                             LOCAL</span>
                           <div class="task-box mb-2">
-                            <p class="text-muted text-truncate mb-0">
+                            <p class="text-dark fs-17 bold  text-truncate mb-0">
                               <%-data.location%>
                             </p>
                           </div>
@@ -262,7 +262,7 @@
                           <table id="patrimonio_vinculado" class="table mt-1 table-centered">
                             <thead>
                               <tr>
-                                <th style="width: 10%">Plaqueta</th>
+                                <th style="width: 15%">Plaqueta</th>
                                 <th>Descricao do Patrimonio</th>
                                 <!-- <th style="width: 10%">Hours</th>
                                                                     <th style="width: 10%">Hours Rate</th>
@@ -282,7 +282,7 @@
                         <div class="text-end d-print-none">
                           <a href="javascript:window.print()" class="btn btn-primary">
                             <i class="uil uil-print me-1"></i> Imprimir Tarefa</a>
-                            <a href="/tasks/complete/<%-data.task_id-%>" class="btn btn-soft-dark">Editar Tarefa</a>
+                            <a href="/tasks/edit/<%-data.task_id-%>" class="btn btn-soft-dark">Editar Tarefa</a>
 
                             <%if(assigned == true && data.status != "complete"){%>
                           <a href="/tasks/complete/<%-data.task_id-%>" class="btn btn-danger">Finalizar Tarefa</a>
@@ -432,6 +432,18 @@
     <script>
 
 
+
+function waranty(start){
+  
+    
+
+                    if( moment().diff(start, 'days') >= 365){
+                         return `<label class="badge badge-soft-danger">Sem Garantia</label>`
+                    }else{
+                         return `<label class="badge badge-soft-success">Equipamento em Garantia</label>`
+                    }
+
+}
     
 
 
@@ -466,8 +478,8 @@
                                                 </a>
                                             </div>
                                         </div>
-                            <h6 class="fs-15 mt-0 mb-1">${row.name} </h6>
-                            <p class="text-muted fs-12"><i class="uil uil-map-pin-alt text-dark"></i>${row.centro_custo}</p>
+                            <h6 class="fs-15 mt-0 mb-1">${row.name} ${waranty(row.data_aquisicao)}</h6>
+                            <p class="text-muted fs-12 mb-0"><i class="uil uil-map-pin-alt text-dark"></i>${row.centro_custo}</p>
                        
                             `;
 
@@ -491,14 +503,15 @@
 
 
       /*PATRIMONIO*/
-
+     
 
       $('[data-plugin="select_patrimonio"]').select2({
           ajax: {
             url: '/api/patrimonio/search?',
             dataType: 'json',
             type: "GET",
-            placeholder: "Buscar ...",
+            allowClear: true,
+            placeholder: "Busque pela Placa do Patrimônio ...",
             minimumInputLength: 3,
             processResults: function(data) {
               return {
@@ -522,8 +535,7 @@
 
         .on('select2:select', function(e) {
           var data = e.params.data;
-          console.log(data);
-
+         
           data.task_id = '<%- data.task_id %>'
 
           $.ajax({
@@ -534,7 +546,7 @@
 
               $('#patrimonio_vinculado').DataTable().ajax.reload();
               console.log("Carregando o Patrimonio vinculado")
-              $('[data-plugin="select_patrimonio"]').select2("val", "");
+              $('[data-plugin="select_patrimonio"]').val('').trigger('change')
 
               HistoryLoad('<%- data.task_id %>')
 
@@ -547,6 +559,8 @@
 
 
         });
+
+        $('.select2-selection--single').append(`<span class="m-2">Busque pela Placa do Patrimônio ...</span>`)
 
 
       function formatRepo(data) {

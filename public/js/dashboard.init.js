@@ -373,7 +373,98 @@ function ($) {
 */
 
 
+$(document).ready(function() {
+   // $('.parsley-examples').parsley();
+});
 
+
+
+
+
+
+
+        $(document).on('select2:open', () => {
+            document.querySelector('.select2-search__field').focus();
+        });
+
+
+  var select = $('[data-plugin="select_servidores"]').select2({
+    ajax: {
+      url: '/api/servidores/search?',
+      dataType: 'json',
+      data: function (params) {
+        var query = {
+          term: params.term
+        }
+
+        // Query parameters will be ?search=[term]&type=public
+        return query;
+      },
+      type: "GET",
+      placeholder: "Buscar ...",
+      minimumInputLength: 3,
+ 
+      processResults: function (data) {
+        return {
+          results: data
+        };
+      },
+    },
+    templateResult: formatRepo,
+    templateSelection: function (data) {
+        if (!data.id) {
+          return data.text;
+        }
+        return $(`<span>${data.registration} - ${data.name}</span>`);
+      },
+  })
+
+  .on('select2:open', function (e) {
+    document.querySelector('.select2-search__field').focus();
+  })
+
+
+  .on('select2:select', function (e) {
+      var data = e.params.data;
+      console.log(data);
+      $("#destiny").text(data.location)
+       $("#contato").val(data.phone)
+  });
+
+  
+
+
+ 
+
+
+
+
+
+  function formatRepo(data) {
+
+    //console.log(data)
+    if (data.loading) {
+      return data.text;
+    }
+
+
+
+    var $tpl = $(`
+                <div class="p-1">
+                    <span class="location"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${data.location}</span></span>
+                    <h5 class="mt-1 mb-1"><span class="text-dark bold repository__name">${data.registration} ${data.name}</span>
+                    <br><span class="badge badge-soft-secondary mt-1">${data.role}</span> </h5>                                   
+                </div>
+        `)
+
+
+
+    return $tpl;
+  }
+
+
+
+  
 
 function priority(priority) {
 
@@ -388,6 +479,23 @@ function priority(priority) {
     var tpl = `<div class="badge bg-${text[0]} float-end">Prioridade ${text[1]}</div>`
     return tpl
 }
+
+function tecnicos(tecnicos) {
+    var tpl = ''
+    
+    if(tecnicos != false){
+        tpl = `<hr class="mt-2 mb-2"><span class="fs-12 mt-2 mb-1 bold text-dark">${(tecnicos.length> 1) ? `Técnicos atendendo:`:`Técnico atendendo:` } </span>`
+        tecnicos.forEach(function (tecnico, index) {
+            tpl += `<span class="badge badge-soft-secondary fs-13">${tecnico.name}</span>`
+        })
+        
+    }
+
+    return tpl
+}
+
+
+
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
@@ -416,9 +524,12 @@ function tplte(row) {
             ${priority(row.priority)}
         
             <p class="text-success text-uppercase  mb-2"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${row.location}</span></p>
-            <h5 class="mt-1 mb-1"><span class="text-dark fs-17">${row.registration} - ${row.name}</span></h5>
+            <h5 class="mt-1 mb-1"><span class="text-dark fs-17 dots">${row.registration} - ${row.name}</span></h5>
             <span class="badge badge-soft-secondary mt-1">${row.role}</span> </h5>
             <p class="text-muted mb-1 mt-2  ">${row.description}</p>
+             
+            ${tecnicos(row.tecnico)}
+             
          
         </div>
         <div class="card-body border-top">
@@ -465,7 +576,18 @@ function showTasks(data){
 
         }else{
 
-            $(".tarefas").empty().append('Não há tarefas.')
+            $(".tarefas").empty().append(`
+            
+            <div class="col-12 text-center">
+                                
+                                        <h4 class="header-title mt-3 pt-3 mb-3" style="font-size:50px !important">😅</h4>
+                                        <p class="sub-header">
+                                           Não há nenhuma tarefa.
+                                        </p>
+
+                                 
+                            </div>
+            `)
         }
 
    
@@ -479,7 +601,6 @@ function initTasks(date){
     $(".tarefas").empty()
 
     var data = {
-        show: getUrlParameter('show'),
         start: date[0],
         end:date[1],
         term: $('#busca').val()
@@ -487,7 +608,7 @@ function initTasks(date){
 
     $.ajax({
         type: "POST",
-        url: `/api/tasks/all`,
+        url: `/api/tasks/mytasks`,
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(data),
@@ -530,3 +651,4 @@ $('#busca').on("input", function() {
         },
          
     });
+

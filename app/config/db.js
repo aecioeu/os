@@ -11,12 +11,65 @@ const getTask = async (data) => {
   tasks.created as created_task
   From
   tasks Inner Join
-  servidores On servidores.id = tasks.id_servidor 
-  WHERE status = ? AND task_id LIKE ? AND (tasks.created BETWEEN ? AND ?) ORDER BY tasks.priority ASC, tasks.created DESC`, 
+  servidores On servidores.id = tasks.id_servidor WHERE status = ? AND task_id LIKE ? AND (tasks.created BETWEEN ? AND ?) ORDER BY tasks.priority ASC, tasks.created DESC`, 
   [data.show, `%${data.term}%`, data.start, data.end]);
  
-  if (rows.length > 0) return rows;
-  return false;
+  if (rows.length > 0) {
+
+    const tasks = [] 
+
+    for (const row of rows) {
+      var tecnico = await getTasktecnicos(row.task_id)
+      row.tecnico = tecnico
+      tasks.push(row)
+    }
+  
+  return tasks
+
+  }else return false;
+ 
+ /* if (rows.length > 0) return   res.json(rows);
+  return res.json({status: "Sorry! Not found."});*/
+
+};
+
+
+const getMyTask = async (data) => {
+
+  var consulta = `SELECT * From tasks_tecnico
+  INNER JOIN tasks ON tasks.task_id = tasks_tecnico.task_is
+  INNER JOIN servidores ON servidores.id = tasks.id_servidor`
+
+
+/*SELECT * FROM TB_ContratoCotista
+INNER JOIN TB_Contrato ON TB_Contrato.id_contrato = TB_ContratoCotista.id_contrato
+INNER JOIN TB_Cotista ON TB_Cotista = TB_ContratoCotista.id_cotista */
+
+
+  let rows = await pool.query(`SELECT  *,
+  tasks.created as created_task From task_tecnico
+  INNER JOIN tasks ON tasks.task_id = task_tecnico.task_id
+  INNER JOIN servidores ON servidores.id = tasks.id_servidor
+  WHERE task_tecnico.id_tecnico = ?
+  AND tasks.status = ?
+  AND tasks.task_id LIKE ? 
+  AND (tasks.created BETWEEN ? AND ?) 
+  ORDER BY tasks.priority ASC, tasks.created DESC`, 
+  [data.tecnico_id, `pendding`,`%${data.term}%`, data.start, data.end]);
+ 
+  if (rows.length > 0) {
+
+    const tasks = [] 
+
+    for (const row of rows) {
+      var tecnico = await getTasktecnicos(row.task_id)
+      row.tecnico = tecnico
+      tasks.push(row)
+    }
+
+  return tasks
+
+  }else return false;
  
  /* if (rows.length > 0) return   res.json(rows);
   return res.json({status: "Sorry! Not found."});*/
@@ -92,13 +145,8 @@ const getTaskData = async (task_id) => {
 
 
   const getNotesHistory = async (task_id) => {
-
-
-   
-
-
-
-    let rows = await pool.query(`Select *
+ 
+   let rows = await pool.query(`Select *
     From
     task_notes Inner Join
     tecnicos On tecnicos.id = task_notes.id_tecnicos WHERE task_notes.task_id = ? ORDER BY task_notes.created DESC`, [task_id]);
@@ -190,6 +238,7 @@ const getServidor = async (id_servidor) => {
   
 
   module.exports = {
+  getMyTask,
   getTaskCount,
   getTasktecnicos,
   getTask,

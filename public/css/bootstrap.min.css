@@ -51,7 +51,7 @@ body {
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #4b4b5a;
+  color: #6c757d;
   background-color: #f3f4f7;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -11047,9 +11047,10 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 10px 0;
- font-family: "Google Sans", sans-serif;
-  color: #343a40;
+    margin: 10px 0;
+    font-family: "Google Sans", sans-serif;
+    color: #4b4b5a;
+    font-weight: 600
 }
 .fs-11 {
   font-size: 11px !important;

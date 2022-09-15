@@ -50,4 +50,26 @@ router.get("/tasks", isLoggedIn, async function (req, res, next) {
   });
 });
 
+
+router.get("/dashboard", isLoggedIn, async function (req, res, next) {
+  res.render("admin/dashboard.ejs", {
+    user : req.user
+  });
+});
+
+router.get("/patrimonio", isLoggedIn, async function (req, res, next) {
+  res.render("admin/patrimonio.ejs", {
+    user : req.user
+  });
+});
+
+
+router.get('/logout', function(req, res, next) {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    req.session.destroy();
+    res.redirect("/login");
+  });
+});
+
 module.exports = router;

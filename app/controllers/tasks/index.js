@@ -79,6 +79,65 @@ await pool.query("INSERT INTO tasks SET ?", data, function (err, result) {
 
 
 
+router.get('/create', isLoggedIn, function (req, res) {
+  //res.send('Service home page');
+  res.render("admin/tasks/create.ejs", { user : req.user});
+
+})
+
+router.post('/edit', isLoggedIn, async function (req, res) {
+
+const dados = req.body
+
+
+let user = req.user.id
+let task_id = dados.task_id
+
+console.log(dados)
+
+
+var data = {
+  id_servidor: dados.servidor,
+  location: dados.destiny,
+  contato: dados.contato,
+  whatsapp: "",
+  description: dados.problem,
+  priority: dados.priority,
+  id_tecnicos : user.id,
+  type: dados.tipo
+};
+
+if(dados.arquived == 'on'){
+  data.status = 'pendding'
+}
+
+await pool.query(
+  "UPDATE servidores SET phone = ? WHERE id = ?",
+  [dados.contato, dados.servidor]
+);
+
+await pool.query("UPDATE tasks SET ? WHERE task_id = ?", [data , task_id], function (err, result) {
+  //atualizar o servidor como o telefone
+
+  if(err) console.log(err)
+
+  if(dados.arquived == 'on'){
+    db.insertHistory("task", `Tarefa Desarquivada`, `${req.user.name} desarquivou esta tarefa em ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , req.user.id, task_id)
+    db.insertHistory("task", `Edição na tarefa`, `${req.user.name} editou informações desta tarefa ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , req.user.id, task_id)
+
+  }else{
+
+    db.insertHistory("task", `Edição na tarefa`, `${req.user.name} editou informações desta tarefa ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , req.user.id, task_id)
+
+  }
+
+  
+  res.redirect('/tasks/view/' + task_id);
+});
+})
+
+
+
 router.post('/note', async function (req, res) {
 
   const dados = req.body
@@ -215,6 +274,8 @@ router.get('/edit/:task_id', async function (req, res) {
   const data = await db.getTaskData(task_id)
   const taskHistory = await db.getTaskHistory(task_id)
   const taskTecnico = await db.getTasktecnicos(task_id)
+
+  console.log(data)
 
 
   var assingned = false

@@ -11,9 +11,35 @@ body {
 
 }
 
+.card {
+  border: none;
+  margin-bottom: 24px;
+  -webkit-box-shadow: 0 0.05rem 0.01rem rgb(75 75 90 / 8%);
+  box-shadow: 0 0.05rem 0.01rem rgb(75 75 90 / 8%);
+  border-radius: 0.25rem;
+}
+
+.media-body {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.media {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
 
 .dataTables_empty{
-  font-size: 22px;
+  font-size: 17px;
+}
+
+.text-muted {
+
+  color:#4b4b5a !important
 }
 
 
@@ -23,6 +49,14 @@ body {
 
 #range-datepicker{
   text-align: center;
+}
+.dots{ 
+
+  display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
 }
 
 
@@ -86,6 +120,10 @@ body::-webkit-scrollbar-thumb {
 
 
 @media print {
+
+  .card:hover {
+    box-shadow: none;
+}
 
   .nav-pills{
     display: none;
@@ -1373,7 +1411,7 @@ body[data-layout-mode="two-column"] .logo-box {
   padding: 20px 27px;
 }
 .page-title-box .page-title {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   margin: 0;
 }
 .page-title-box .breadcrumb {
@@ -2646,6 +2684,7 @@ body.authentication-bg {
   padding: 0;
   background-image: url(../img/auth-bg.jpg);
   background-repeat: no-repeat;
+  background-position: center right;
   background-size: cover;
   height: 100%;
   position: relative;

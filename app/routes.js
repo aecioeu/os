@@ -21,6 +21,10 @@ module.exports = function (app, passport) {
     const tasks = require('./controllers/tasks/index.js');
     app.use('/tasks', tasks);
 
+    app.get("*", function (req, res) {
+        res.render("admin/404.ejs");
+      });
+
 }
 
   

@@ -22,9 +22,24 @@ router.post('/all', async function (req, res) {
     term: req.body.term
   };
 
-  console.log(data)
-
  var rows = await db.getTask((data))
+ res.json(rows);
+
+})
+
+
+router.post('/mytasks', async function (req, res) {
+
+
+  const dados = req.body
+  var data = {
+    tecnico_id : req.user.id,
+    start: moment(req.body.start).format("YYYY-MM-DD 00:00:00"),
+    end: moment(req.body.end).format("YYYY-MM-DD 23:59:59"),
+    term: req.body.term
+  };
+
+ var rows = await db.getMyTask(data)
  res.json(rows);
 
 })

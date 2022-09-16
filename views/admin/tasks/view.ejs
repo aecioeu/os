@@ -298,6 +298,82 @@
 
                     
                     <div class="tab-pane fade" id="pills-notes" role="tabpanel" aria-labelledby="pills-notes-tab">
+
+                      <h4 class="header-title mb-2">SERVIÇOS</h4>
+
+
+                      <form action="/tasks/55555" method="post" class="parsley-examples">
+
+                        <div class="mb-1 row">
+                          
+                          <div class="col-lg-12">
+                              <label class="form-label">Patrimonio referência</label>
+                            <select class="form-select" name="ref_patrimonio">
+                             
+                           
+                            </select>
+                          </div>
+                        </div>
+
+                         <!-- end row -->
+                      <div class="mb-1 row">
+                        <div class="col-lg-12">
+                          <label class="form-label">Buscar serviços</label>
+
+
+
+                          <select class="form-select" name="servidor" data-plugin="select_service">
+                          </select>
+
+                        </div>
+
+
+                      </div>
+
+                     
+
+
+                        <div class="mb-1 row">
+                                                   <div class="col-lg-12">
+                            <label class="form-label" for="destino">Observação</label>
+                               <textarea class="form-control" rows="3" name="service" id="service"></textarea>
+                          </div>
+                        </div>
+
+                        
+                        <div class="mt-3 mb-1">
+                          <div class="text-end d-print-none">
+                            <a href="" class="btn btn-primary btn-block w-25 mb-0"><i class="uil uil-focus-add mr-2"></i>Inserir serviço</a>
+                             
+  
+                             
+                          </div>
+                        </div>
+  
+
+                        <div class="row">
+                          <div class="col-12">
+  
+  
+  
+                            <table id="service_vinculado" class="table mt-1 table-centered">
+                              <thead>
+                                <tr>
+                                  <th style="width: 15%">Plaqueta</th>
+                                  <th>Descricao do Serviço</th>
+                                  <!-- <th style="width: 10%">Hours</th>
+                                                                      <th style="width: 10%">Hours Rate</th>
+                                                                      <th style="width: 10%" class="text-end">Total</th>-->
+                                </tr>
+                              </thead>
+  
+                            </table>
+  
+                          </div> <!-- end col -->
+                        </div>
+
+
+                      </form>
                       
 
                 </div>
@@ -441,6 +517,20 @@
 
 
 
+          function newService(id){
+
+            $('#pills-notes-tab').tab('show');
+          $(`[name="ref_patrimonio"] option[value="${id}"]`).prop('selected', true)
+       
+          $('html, body').animate({
+                    scrollTop: $('[name="ref_patrimonio"]').offset().top
+                }, 0);
+
+
+
+          }
+
+
 function waranty(start){
   
     
@@ -488,7 +578,7 @@ function waranty(start){
                                                 </a>
                                             </div>
                                         </div>
-                                        <a href="/tasks/service/${row.registration}" class="btn btn-secondary float-end">+ Serviço</a>
+                                        <span onclick="newService('${row.registration}')" class="btn btn-secondary float-end">+ Serviço</span>
                             <h6 class="fs-15 mt-0 mb-1">${row.name} ${waranty(row.data_aquisicao)}</h6>
                             <p class="text-muted fs-12 mb-0"><i class="uil uil-map-pin-alt text-dark"></i>${row.centro_custo}</p>
 
@@ -498,9 +588,35 @@ function waranty(start){
 
             }
           },
-        ]
+        ],
+
+    fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
+
+      
+    $('[name=ref_patrimonio]').append($('<option>', { 
+        value: aData.registration,
+        text : `${aData.registration} - ${aData.name}` 
+    }));
+
+
+
+        }
       });
 
+      table_.on( 'preDraw', function () {
+              $("[name=ref_patrimonio] option").remove();
+
+      $('[name=ref_patrimonio]').append($('<option>', { 
+        value: '',
+        text : "Não" 
+      }));
+
+
+    
+} );
+
+
+      /**/
 
 
 
@@ -514,6 +630,56 @@ function waranty(start){
       $('.created_time').text(moment($('.created_time').text()).format('DD/MM/YYYY HH:ss'))
       
 
+
+      /*SERVICOS*/
+
+      $('[data-plugin="select_service"]').select2({
+  
+    ajax: {
+        url: '/api/services/search?',
+        dataType: 'json',
+     
+            type: "GET",
+        processResults: function(data) {
+          return {
+            results: data
+          }
+        },
+        
+    },
+    templateResult: formatRepoService,
+    templateSelection: function(data) {
+            if (!data.id) {
+              return data.text;
+            }
+            return $(`<span>${data.id} - ${data.name}</span>`);
+          }
+          
+})
+
+
+        function formatRepoService(data) {
+
+          console.log(data)
+
+          //console.log(data)
+          if (data.loading) {
+            return data.text;
+          }
+
+  //        $("#destiny").text(data.location)
+            $("#service").val(data.phone)
+
+          var $tpl = $(`
+              <div class="p-1">
+                  <h5 class="mt-1 mb-1"><span class="text-dark bold repository__name">${data.id} - ${data.name}</span>
+                  </div>
+          `)
+
+
+
+          return $tpl;
+          }
 
       /*PATRIMONIO*/
      
@@ -563,6 +729,8 @@ function waranty(start){
 
               HistoryLoad('<%- data.task_id %>')
 
+              
+
               // You will get response from your PHP page (what you echo or print)
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -573,7 +741,7 @@ function waranty(start){
 
         });
 
-        $('.select2-selection--single').append(`<span class="m-2">Busque pela Placa do Patrimônio ...</span>`)
+        //$('.select2-selection--single').append(`<span class="m-2">Busque pela Placa do Patrimônio ...</span>`)
 
 
       function formatRepo(data) {

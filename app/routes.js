@@ -15,6 +15,9 @@ module.exports = function (app, passport) {
     const api_patrimonio = require('./controllers/api/patrimonio/index.js');
     app.use('/api/patrimonio', api_patrimonio);
 
+    const api_services = require('./controllers/api/services/index.js');
+    app.use('/api/services', api_services);
+
     const api_tasks = require('./controllers/api/tasks/index.js');
     app.use('/api/tasks', api_tasks);
     

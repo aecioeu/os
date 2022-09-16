@@ -6,7 +6,7 @@
 <!-- BEGIN: Body-->
 <style>
   @media print {
-    .select2 {
+    .select2 , .tasks_notes{
       display: none !important
     }
 
@@ -48,7 +48,7 @@
           <!-- end page title -->
 
           <div class="row">
-            <div class="col-xl-10">
+            <div class="col-xl-8">
               <div class="card">
 
                 <div class="card-body">
@@ -298,101 +298,7 @@
 
                     
                     <div class="tab-pane fade" id="pills-notes" role="tabpanel" aria-labelledby="pills-notes-tab">
-                      <h4 class="header-title mb-1">NOTAS</h4>
-
-                      <%if(data.status != "complete"){%>
-
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <div class="clearfix pt-2">
-                             
-  
-                              <form action="#" id="notes" method="POST" class="comment-area-box">
-                                
-                                <div class="d-flex">
-                                <div class="me-3 flex-shrink-0">
-                                      <a href="#"> 
-                                          <img class="d-flex-object rounded-circle avatar-sm" alt="" src="/img/profile/<%-user.profile%>"> 
-                                      </a>
-                                  </div>
-
-                                  <div class="flex-grow-1">
-                               
-                                    <textarea rows="2" id="description" class="form-control border-0 resize-none" placeholder="Nota pertinentes a Tarefa ..."></textarea>
-                                    <div class="p-2 bg-light blight-border">
-                                      <div class="float-end">
-                                        <button type="submit" id="sendnotes" class="btn btn-sm btn-success">
-                                          Enviar como <%-user.name%> <i class="uil uil-message ml-1"></i>
-                                        </button>
-                                      </div>
-                                      <div>
-                                       <a href="#" class="btn btn-sm px-1 btn-light">
-                                          <i class="uil uil-cloud-upload"></i>
-                                        </a>
-                                        <!--<a href="#" class="btn btn-sm px-1 btn-light">
-                                          <i class="uil uil-at"></i>
-                                        </a>-->
-                                      </div>
-                                    </div>
-                               
-                                  </div>
-                                </div>
-
-
-                               
-                              </form>
-  
-                              <!-- <small class="text-muted">
-                                          All accounts are to be paid within 7 days from receipt of
-                                          invoice. To be paid by cheque or credit card or direct payment
-                                          online. If account is not paid within 7 days the credits details
-                                          supplied as confirmation of work undertaken will be charged the
-                                          agreed quoted fee noted above.
-                                        </small>-->
-                            </div>
-                          </div> <!-- end col -->
-  
-                        </div>
-                        <!-- end row -->
-                        <%}%>
-                      <%if(assigned == "unknow"){%>
-                         
-                        
-                          <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                          <%-user.name%>, você não pode adicionar nenhuma nota a está tarefa.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>
-
-                    <%}%>
-
-                    <%if(data.status == "complete"){%>
-                         
-                        
-                      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      <%-user.name%>, não é possivel adicionar notas pois está tarefa já foi concluida.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
-
-                <%}%>
-
-
-             
-               
-                         
-
-                            <div class="chat-conversation">
-                              <ul class="conversation-list notes">
-                                     
-                                <li class="position-relative">
-                                  <hr>
-                                  <h4><span class="badge bg-light text-dark position-absolute top-0 start-50 translate-middle">Hoje</span></h4>
-                                </li>
-
-                              </ul>
-
-                
-
-                  </div>
+                      
 
                 </div>
 
@@ -418,9 +324,111 @@
 
         </div> <!-- container -->
 
-      </div> <!-- content -->
+     
+
+      <div class="col-xl-4 tasks_notes">
+        <div class="card">
+
+          <div class="card-body">
+
+            <h4 class="header-title mb-1">OBSERVAÇÕES</h4>
+
+            <%if(data.status != "complete"){%>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="clearfix pt-2">
+                   
+
+                    <form action="#" id="notes" method="POST" class="comment-area-box">
+                      
+                      <div class="d-flex">
+                      <div class="me-3 flex-shrink-0">
+                            <a href="#"> 
+                                <img class="d-flex-object rounded-circle avatar-sm" alt="" src="/img/profile/<%-user.profile%>"> 
+                            </a>
+                        </div>
+
+                        <div class="flex-grow-1">
+                     
+                          <textarea rows="2" id="description" class="form-control border-0 resize-none" placeholder="Digite aqui .."></textarea>
+                          <div class="p-2 bg-light blight-border">
+                            <div class="float-end">
+                              <button type="submit" id="sendnotes" class="btn btn-sm btn-success">
+                                Enviar como <%-user.name%> <i class="uil uil-message ml-1"></i>
+                              </button>
+                            </div>
+                            <div>
+                             <a href="#" class="btn btn-sm px-1 btn-light">
+                                <i class="uil uil-cloud-upload"></i>
+                              </a>
+                              <!--<a href="#" class="btn btn-sm px-1 btn-light">
+                                <i class="uil uil-at"></i>
+                              </a>-->
+                            </div>
+                          </div>
+                     
+                        </div>
+                      </div>
 
 
+                     
+                    </form>
+
+                    <!-- <small class="text-muted">
+                                All accounts are to be paid within 7 days from receipt of
+                                invoice. To be paid by cheque or credit card or direct payment
+                                online. If account is not paid within 7 days the credits details
+                                supplied as confirmation of work undertaken will be charged the
+                                agreed quoted fee noted above.
+                              </small>-->
+                  </div>
+                </div> <!-- end col -->
+
+              </div>
+              <!-- end row -->
+              <%}%>
+            <%if(assigned == "unknow"){%>
+               
+              
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%-user.name%>, você não pode adicionar nenhuma nota a está tarefa.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+          <%}%>
+
+          <%if(data.status == "complete"){%>
+               
+              
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <%-user.name%>, não é possivel adicionar notas pois está tarefa já foi concluida.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+      <%}%>
+
+
+   
+     
+               
+
+                  <div class="chat-conversation">
+                    <ul class="conversation-list notes">
+                  
+
+                    </ul>
+
+      
+
+        </div>
+
+
+            </div>
+
+          </div>
+
+        </div> <!-- content -->
 
     </div>
 
@@ -468,9 +476,11 @@ function waranty(start){
             render: function(data, type, row) {
               return `
                             <div class="dropdown align-self-center float-end">
+                              
                                             <a href="#" class="dropdown-toggle arrow-none text-muted" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="uil uil-ellipsis-v"></i>
                                             </a>
+                                            
                                             <div class="dropdown-menu dropdown-menu-end" style="">
                                               
                                                 <a href="javascript:void(0);" onclick="deletePatrimonio('${row.id}', '<%- data.task_id %>')" class="dropdown-item text-danger">
@@ -478,8 +488,11 @@ function waranty(start){
                                                 </a>
                                             </div>
                                         </div>
+                                        <a href="/tasks/service/${row.registration}" class="btn btn-secondary float-end">+ Serviço</a>
                             <h6 class="fs-15 mt-0 mb-1">${row.name} ${waranty(row.data_aquisicao)}</h6>
                             <p class="text-muted fs-12 mb-0"><i class="uil uil-map-pin-alt text-dark"></i>${row.centro_custo}</p>
+
+                           
                        
                             `;
 
@@ -637,7 +650,7 @@ function Tplnotes(data){
               ` <li class="clearfix">
                                             <div class="chat-avatar">
                                                 <img src="/img/profile/${notes.profile}" alt="user">
-                                                <i>${moment(notes.created).format('hh:mm')}</i>
+                                                <i>${moment(notes.note_created).format('hh:mm')}</i>
                                                 
                                             </div>
                                             <div class="conversation-text">

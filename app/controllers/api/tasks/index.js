@@ -30,7 +30,6 @@ router.post('/all', async function (req, res) {
 
 router.post('/mytasks', async function (req, res) {
 
-
   const dados = req.body
   var data = {
     tecnico_id : req.user.id,
@@ -44,10 +43,7 @@ router.post('/mytasks', async function (req, res) {
 
 })
 
-
 router.get('/patrimonio/:task_id', async function (req, res) {
-
-
 
   const task_id = req.params.task_id
   let rows = await pool.query("SELECT * FROM task_patrimonio WHERE task_id = ?", [task_id]);
@@ -59,10 +55,6 @@ router.get('/patrimonio/:task_id', async function (req, res) {
 
 })
 
-
-
-
-
 router.get('/history/:task_id', async function (req, res) {
 
   const task_id = req.params.task_id
@@ -71,8 +63,6 @@ router.get('/history/:task_id', async function (req, res) {
 
 })
 
-
-
 router.get('/notes/:task_id', async function (req, res) {
 
   const task_id = req.params.task_id
@@ -80,8 +70,6 @@ router.get('/notes/:task_id', async function (req, res) {
   res.json(data);
 
 })
-
-
 
 router.get('/about', function (req, res) {
   res.send('About this Api');

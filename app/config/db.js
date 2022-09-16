@@ -146,7 +146,7 @@ const getTaskData = async (task_id) => {
 
   const getNotesHistory = async (task_id) => {
  
-   let rows = await pool.query(`Select *
+   let rows = await pool.query(`Select * , task_notes.created as note_created
     From
     task_notes Inner Join
     tecnicos On tecnicos.id = task_notes.id_tecnicos WHERE task_notes.task_id = ? ORDER BY task_notes.created DESC`, [task_id]);
@@ -158,7 +158,7 @@ const getTaskData = async (task_id) => {
     // this gives an object with dates as keys
     const groups = data.reduce((groups, game) => {
     
-      const date = game.created.toLocaleDateString();
+      const date = game.note_created.toLocaleDateString();
       if (!groups[date]) {
         groups[date] = [];
       }

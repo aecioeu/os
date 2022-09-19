@@ -12,6 +12,18 @@ const sendMessage = async (data) => {
   console.log(data);
 };
 
+const sendButtonMessage = async (data) => {
+  const response = await fetch("/api/whatsapp/send", {
+    method: "POST",
+    body: JSON.stringify(data), // string or object
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  let respData = await response.json(); //extract JSON from the http response
+  console.log(data);
+};
+
 const checkWhatsapp = async (number) => {
   $(".input-group-text").text("🗙");
   $("#whatsapp").val()

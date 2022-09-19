@@ -24,42 +24,7 @@ const port = process.env.PORT || 3000;
 
 const socket = require("socket.io");
 
-
-
 const compression = require('compression')
-/*
-var clients = {}; 
-
-setInterval( function() {
-
-  var msg = Math.random();
-  io.emit('message', msg);
-  console.log (msg);
-
-}, 1000);
-
-io.on("connection", function (client) {  
-  console.log('askdoksdo')
-  client.on("join", function(name){
-    console.log("Joined: " + name);
-      clients[client.id] = name;
-      client.emit("update", "You have connected to the server.");
-      client.broadcast.emit("update", name + " has joined the server.")
-  });
-
-  client.on("send", function(msg){
-    console.log("Message: " + msg);
-      client.broadcast.emit("chat", clients[client.id], msg);
-  });
-
-  client.on("disconnect", function(){
-    console.log("Disconnect");
-      io.emit("update", clients[client.id] + " has left the server.");
-      delete clients[client.id];
-  });
-});
-*/
-
 app.use(compression());
 app.disable('x-powered-by');
 //app.use(express.static(__dirname + '/public')); // configure express to use public folder
@@ -105,14 +70,47 @@ require("./app/routes.js")(app, passport);
 
 
 
-
-
 var server = app.listen(port);
 console.log('The magic happens on port ' + port);
 
 const io = socket(server);
 
-const activeUsers = new Set();
+/*
+var clients = {}; 
+
+setInterval( function() {
+
+  var msg = Math.random();
+  io.emit('message', msg);
+  console.log (msg);
+
+}, 1000);
+
+io.on("connection", function (client) {  
+  console.log('askdoksdo')
+  client.on("join", function(name){
+    console.log("Joined: " + name);
+      clients[client.id] = name;
+      client.emit("update", "You have connected to the server.");
+      client.broadcast.emit("update", name + " has joined the server.")
+  });
+
+  client.on("send", function(msg){
+    console.log("Message: " + msg);
+      client.broadcast.emit("chat", clients[client.id], msg);
+  });
+
+  client.on("disconnect", function(){
+    console.log("Disconnect");
+      io.emit("update", clients[client.id] + " has left the server.");
+      delete clients[client.id];
+  });
+});
+*/
+
+
+var activeUsers = new Set()
+
 
 io.on("connection", function (socket) {
   console.log("Made socket connection");

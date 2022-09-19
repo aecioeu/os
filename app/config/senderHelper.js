@@ -5,6 +5,7 @@ const fs = require("fs");
 
 
 const sendMsg = async (payload, client) => {
+
     //payload.from = payload.from.toString().replace(/\D/g, "")
     await client.presenceSubscribe(payload.from);
     await delay(rand(500));
@@ -60,6 +61,7 @@ const sendMsg = async (payload, client) => {
   
       case "button2":
         var templateButtons = [];
+        console.log(payload.from)
         payload.buttons.forEach(function (button, i) {
           templateButtons.push({
             index: i + 1,

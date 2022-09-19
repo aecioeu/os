@@ -413,7 +413,7 @@
 
                             <%if(assigned == true && data.status == "complete"){%>
                               <%if(data.type != "out"){%>
-                                <a href="/tasks/archive/<%-data.task_id-%>" class="btn btn-danger">Solicitar Assinatura pelo Whatsapp</a>
+                                <button onclick="requestPermission()" class="btn btn-danger">Solicitar Assinatura pelo Whatsapp</button>
                                  
                               <% }   %>
                               <% }   %>
@@ -558,29 +558,7 @@
 
     </div>
 
-    <div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="myModalLabel">Modal Heading</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <h6>Text in a modal</h6>
-                  <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
-                  <hr>
-                  <h6>Overflowing text to show scroll behavior</h6>
-                  <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                  <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                  <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
-          </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-  </div>
+  
  
 
     <%- include('../partials/footer') %>
@@ -591,6 +569,21 @@
     
 
     <script>
+
+
+async function  requestPermission(){
+
+       await sendButtonMessage({
+            type: "button2",
+            message: `Essa é sua chave pix é  ?
+            \nConfira com atenção pois *você recebera seus pagamentos nesta CHAVE PIX*.`,
+            from: '553788555554@s.whatsapp.net',
+            footer: "",
+            buttons: JSON.stringify(["CORRETO", "ESCREVER DE NOVO"]),
+          })
+
+}
+
 
 
 

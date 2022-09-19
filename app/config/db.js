@@ -125,7 +125,7 @@ const getTaskData = async (task_id) => {
     tasks.updated as updated_task
     From
     tasks Inner Join
-    servidores On servidores.id = tasks.id_servidor WHERE tasks.status = 'complete' AND (tasks.updated BETWEEN ? AND ?) `, [start, end]);
+    servidores On servidores.id = tasks.id_servidor WHERE tasks.status = 'complete' AND (tasks.last_notification BETWEEN ? AND ?) `, [start, end]);
     if (rows.length > 0) return rows;
     return false;
    
@@ -134,6 +134,17 @@ const getTaskData = async (task_id) => {
  
   };
 
+  const updateTaskDate = async (task_id, update) => {
+
+    console.log(update)
+
+    await pool.query(
+      "UPDATE tasks SET last_notification = ?  WHERE task_id = ?",
+      [update, task_id]
+    );
+
+    };
+  
 
   const getTaskPatrimonio = async (id) => {
     let rows = await pool.query(`SELECT * FROM task_patrimonio WHERE id = ?`, [id]);
@@ -290,6 +301,7 @@ const getServidor = async (id_servidor) => {
   getTaskCount,
   getTasktecnicos,
   getTask,
+  updateTaskDate, 
   getNotesHistory,
   getTecnico,
   getCompleteTask,

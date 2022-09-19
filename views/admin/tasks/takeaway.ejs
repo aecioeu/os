@@ -349,14 +349,7 @@
                       <div class="mb-1 row">
                         <div class="col-lg-12">
                           <h5 class="mt-2 bold">PATRIMONIO E SERVIÇOS</h5>
-
-
-
-                          <select class="form-select" name="servidor" data-plugin="select_patrimonio">
-                          </select>
-
                         </div>
-
 
                       </div>
 
@@ -382,36 +375,50 @@
                       </div>
                       <!-- end row -->
 
+                      <!-- end row -->
+                      <div class="mb-1 row">
+                        <div class="col-lg-8">
+                          <h5 class="mt-2 bold">RECEBEDOR</h5>
+
+                           <select class="form-select" name="servidor" data-plugin="select_servidores" required>
+                              </select>
+
+                        </div>
+
+                        <div class="col-lg-4">
+                          <h5 class="mt-2 bold">Whatsapp</h5>
+
+                       
+                          
+                              
+                              <div class="input-group">
+                                <div class="input-group-text">?</div>
+                                <input type="text" class="form-control contato" name="contato" id="contato" pattern="\d+((\(|)|-)\d+)?" inputmode="numeric" placeholder="" parsley-trigger="change" required  >
+                            </div>
+
+                        </div>
+
+
+                      </div>
+
+                     
+
                      
 
                       <div class="mt-3 mb-1">
                         <div class="text-end d-print-none">
                           <a href="javascript:window.print()" class="float-start btn btn-primary">
                             <i class="uil uil-print me-1"></i> Imprimir Tarefa</a>
-                            <a href="/tasks/edit/<%-data.task_id-%>" class="btn btn-soft-dark">Editar Tarefa</a>
+                           
 
-                            <%if(assigned == true && data.status != "complete"){%>
+                            <%if(assigned == true && data.status == "complete"){%>
                               <%if(data.type != "out"){%>
-                                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasTop">Finalizar Tarefa</button>
-                            
-                              <% } else {  %>
-                                    <a href="/tasks/archive/<%-data.task_id-%>" class="btn btn-danger">Concluir e Arquivar Tarefa</a>
+                                <a href="/tasks/archive/<%-data.task_id-%>" class="btn btn-danger">Solicitar Assinatura pelo Whatsapp</a>
                                  
+                              <% }   %>
+                              <% }   %>
+                                  
     
-                                    <%}%>
-                             
-                              <%}  else if(data.status == "complete") {%>
-                                <div class="btn-group me-1">
-                                  <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Realizar Entrega <i class="icon"><span data-feather="chevron-down"></span></i>
-                                  </button>
-                                  <div class="dropdown-menu dropdown-menu-end" style="">
-                                      <a class="dropdown-item" href="#">Validar por Whatsapp</a>
-                                      <a class="dropdown-item" href="#">Validar por assinatura</a>
-                                  </div>
-                              </div>
-                                                      
-                                <%} %>
                         </div>
                       </div>
 
@@ -579,6 +586,7 @@
     <%- include('../partials/footer') %>
     <script src="/js/jquery.dataTables.min.js"></script>
     <script src="/js/wp.init.js"></script>
+    <script src="/js/masked.js"></script>
 
     
 
@@ -767,10 +775,7 @@ return ``
 
 
 
-      $(document).on('select2:open', () => {
-        document.querySelector('.select2-search__field').focus();
-       // console.log('asdasokd')
-      });
+
 
 
       HistoryLoad('<%- data.task_id %>')
@@ -778,143 +783,102 @@ return ``
       $('.created_time').text(moment($('.created_time').text()).format('DD/MM/YYYY HH:ss'))
       
 
-
-      /*SERVICOS*/
-
-      $('[data-plugin="select_service"]').select2({
-        dropdownParent: $('#offcanvasRight'),
-  
-    ajax: {
-        url: '/api/services/search?',
-        dataType: 'json',
-     
-            type: "GET",
-        processResults: function(data) {
-          return {
-            results: data
-          }
-        },
-        
-    },
-    templateResult: formatRepoService,
-    templateSelection: function(data) {
-            if (!data.id) {
-              return data.text;
-            }
-            return $(`<span>${data.id} - ${data.name}</span>`);
-          }
-          
-})
-
-
-        function formatRepoService(data) {
-
-          console.log(data)
-
-          //console.log(data)
-          if (data.loading) {
-            return data.text;
-          }
-
-  //        $("#destiny").text(data.location)
-            $("#service").val(data.phone)
-
-          var $tpl = $(`
-              <div class="p-1">
-                  <h5 class="mt-1 mb-1"><span class="text-dark bold repository__name">${data.id} - ${data.name}</span>
-                  </div>
-          `)
-
-
-
-          return $tpl;
-          }
-
-      /*PATRIMONIO*/
-     
-
-      $('[data-plugin="select_patrimonio"]').select2({
-          ajax: {
-            url: '/api/patrimonio/search?',
-            dataType: 'json',
-            type: "GET",
-            allowClear: true,
-            placeholder: "Busque pela Placa do Patrimônio ...",
-            minimumInputLength: 3,
-            processResults: function(data) {
-              return {
-                results: data
-              };
-            },
-          },
-          templateResult: formatRepo,
-          templateSelection: function(data) {
-            if (!data.id) {
-              return data.text;
-            }
-            return $(`<span>${data.registration} - ${data.name}</span>`);
-          },
-        })
-
-        .on('select2:open', function(e) {
-          //document.querySelector('.select2-search__field').focus();
-        })
-
-
-        .on('select2:select', function(e) {
-          var data = e.params.data;
-         
-          data.task_id = '<%- data.task_id %>'
-
-          $.ajax({
-            url: "/tasks/create/patrimonio",
-            type: "post",
-            data: data,
-            success: function(response) {
-
-              $('#patrimonio_vinculado').DataTable().ajax.reload();
-              console.log("Carregando o Patrimonio vinculado")
-              $('[data-plugin="select_patrimonio"]').val('').trigger('change')
-
-              HistoryLoad('<%- data.task_id %>')
-
-              
-
-              // You will get response from your PHP page (what you echo or print)
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-              console.log(textStatus, errorThrown);
-            }
-          });
-
-
+      $(document).on('select2:open', () => {
+            document.querySelector('.select2-search__field').focus();
         });
 
-        //$('.select2-selection--single').append(`<span class="m-2">Busque pela Placa do Patrimônio ...</span>`)
 
-
-      function formatRepo(data) {
-
-        //console.log(data)
-        if (data.loading) {
-          return data.text;
+  var select = $('[data-plugin="select_servidores"]').select2({
+    ajax: {
+      url: '/api/servidores/search?',
+      dataType: 'json',
+      data: function (params) {
+        var query = {
+          term: params.term
         }
 
-        $("#destiny").text(data.location)
-        $("#contato").val(data.phone)
+        // Query parameters will be ?search=[term]&type=public
+        return query;
+      },
+      type: "GET",
+      placeholder: "Buscar ...",
+      minimumInputLength: 3,
+ 
+      processResults: function (data) {
+        return {
+          results: data
+        };
+      },
+    },
+    templateResult: formatRepo,
+    templateSelection: function (data) {
+        if (!data.id) {
+          return data.text;
+        }
+        return $(`<span>${data.registration} - ${data.name}</span>`);
+      },
+  })
 
-        var $tpl = $(`
+  .on('select2:open', function (e) {
+    document.querySelector('.select2-search__field').focus();
+  })
+
+
+  .on('select2:select', function (e) {
+      var data = e.params.data;
+     
+      $("#destiny").text(data.location)
+       var contato = $("#contato").val(data.phone).mask("(99) 99999-999?9")
+       checkWhatsapp(data.phone)
+  });
+
+
+$(document).ready(function() {
+
+if($(".contato")){
+
+$(".contato").mask("(99) 9999-9999?9").focusout(function(event) {
+  var target, phone, element;
+  target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+  phone = target.value.replace(/\D/g, '');
+  element = $(target);
+  element.unmask();
+  if (phone.length > 10) {
+      element.mask("(99) 99999-999?9");
+      checkWhatsapp(phone)
+  } else {
+      element.mask("(99) 9999-9999?9");
+  }
+});
+}
+
+});
+
+
+
+
+function formatRepo(data) {
+
+//console.log(data)
+if (data.loading) {
+  return data.text;
+}
+
+
+
+var $tpl = $(`
             <div class="p-1">
-                <span class="location"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${data.centro_custo}</span></span>
+                <span class="location"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${data.location}</span></span>
                 <h5 class="mt-1 mb-1"><span class="text-dark bold repository__name">${data.registration} ${data.name}</span>
-                <br><span class="badge badge-soft-secondary mt-1">${data.situacao}</span> </h5>                                   
+                <br><span class="badge badge-soft-secondary mt-1">${data.role}</span> </h5>                                   
             </div>
     `)
 
 
 
-        return $tpl;
-      }
+return $tpl;
+}
+
 
 
 

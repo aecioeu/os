@@ -1,7 +1,8 @@
 
 
 
-  const config = require("./config.json");
+const config = require("./config.json");
+
 
 
 // app.js
@@ -21,7 +22,43 @@ var fileStoreOptions = {};
 const app = express();
 const port = process.env.PORT || 3000;
 
+const socket = require("socket.io");
+
+
+
 const compression = require('compression')
+/*
+var clients = {}; 
+
+setInterval( function() {
+
+  var msg = Math.random();
+  io.emit('message', msg);
+  console.log (msg);
+
+}, 1000);
+
+io.on("connection", function (client) {  
+  console.log('askdoksdo')
+  client.on("join", function(name){
+    console.log("Joined: " + name);
+      clients[client.id] = name;
+      client.emit("update", "You have connected to the server.");
+      client.broadcast.emit("update", name + " has joined the server.")
+  });
+
+  client.on("send", function(msg){
+    console.log("Message: " + msg);
+      client.broadcast.emit("chat", clients[client.id], msg);
+  });
+
+  client.on("disconnect", function(){
+    console.log("Disconnect");
+      io.emit("update", clients[client.id] + " has left the server.");
+      delete clients[client.id];
+  });
+});
+*/
 
 app.use(compression());
 app.disable('x-powered-by');
@@ -53,7 +90,7 @@ app.use(session({
 })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use(morgan('combined'))
+//app.use(morgan('combined'))
 
 // middleware de tratamento de erro
 //require('./config/https')(app); // pass passport for configuration
@@ -63,7 +100,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./app/config/passport')(app, passport); // pass passport for configuration
 // routes ======================================================================
-const cliente = "123"
+
 require("./app/routes.js")(app, passport); 
 
 
@@ -73,6 +110,30 @@ require("./app/routes.js")(app, passport);
 var server = app.listen(port);
 console.log('The magic happens on port ' + port);
 
+const io = socket(server);
+
+const activeUsers = new Set();
+
+io.on("connection", function (socket) {
+  console.log("Made socket connection");
+
+  socket.on("new user", function (data) {
+    socket.userId = data;
+    activeUsers.add(data);
+    io.emit("new user", [...activeUsers]);
+  });
+
+  socket.on("disconnect", () => {
+    activeUsers.delete(socket.userId);
+    io.emit("user disconnected", socket.userId);
+  });
+});
+
+setInterval(() => {
+  console.log(activeUsers)
+  
+}, 1000);
+ 
 
 /*
 connectToWhatsApp();

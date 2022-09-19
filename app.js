@@ -1,3 +1,9 @@
+
+
+
+  const config = require("./config.json");
+
+
 // app.js
 const express = require('express');
 const session = require('express-session');
@@ -57,7 +63,8 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./app/config/passport')(app, passport); // pass passport for configuration
 // routes ======================================================================
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+const cliente = "123"
+require("./app/routes.js")(app, passport); 
 
 
 
@@ -65,4 +72,76 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 
 var server = app.listen(port);
 console.log('The magic happens on port ' + port);
+
+
+/*
+connectToWhatsApp();
+//start("");
+async function start(client) {
+  app.listen(config.port, async function () {
+
+    
+   
+   var fs = require('fs');
+
+if (!fs.existsSync('./sessions')){
+    fs.mkdirSync('./sessions', { recursive: true });
+}
+    //await init(); // inicia o treino da IA
+    console.log("Servidor Iniciado e escutando na porta " + config.port);
+  });
+
+  require("./app/routes.js")(app, passport); // load our routes and pass in our app and fully configured passport
+  // end start
+}
+
+async function connectToWhatsApp() {
+  const client = makeWAclientet({
+    //logger: P({ level: 'debug' }),
+    auth: state,
+    printQRInTerminal: true,
+    version: [2, 2204, 13], 
+  });
+
+  await start(client);
+  
+
+  client.ev.on("connection.update", (update) => {
+    const { connection } = update;
+    if (connection === "close") {
+      console.log("closed connection ");
+     
+      process.exit( );
+
+
+    } else if (connection === "open") {
+      console.log("opened connection");
+    }
+  });
+
+  //const botNumber = client.user.id.includes(':') ? client.user.id.split(':')[0] + '@s.whatsapp.net' : client.user.id
+
+  client.ev.on("messages.upsert", async (m) => {
+    const msg = m.messages[0];
+    if (
+      !msg.key.fromMe &&
+      m.type === "notify" &&
+      m.messages[0].key.remoteJid !== "status@broadcast"
+    ) {
+      console.log("Enviando mensagem para: ", m.messages[0].key.remoteJid);
+      await processMessage(msg, client);
+    }
+  });
+
+
+
+  //client.ev.on("presence.update", (m) => console.log(m));
+  //client.ev.on("chats.update", (m) => console.log(m));
+  //client.ev.on("contacts.update", (m) => console.log(m));
+
+  client.ev.on("creds.update", saveState);
+}
+
+*/
+
 

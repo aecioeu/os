@@ -36,10 +36,6 @@ const getTask = async (data) => {
 
 const getMyTask = async (data) => {
 
-  var consulta = `SELECT * From tasks_tecnico
-  INNER JOIN tasks ON tasks.task_id = tasks_tecnico.task_is
-  INNER JOIN servidores ON servidores.id = tasks.id_servidor`
-
 
 /*SELECT * FROM TB_ContratoCotista
 INNER JOIN TB_Contrato ON TB_Contrato.id_contrato = TB_ContratoCotista.id_contrato
@@ -91,6 +87,19 @@ Group By
 
 };
 
+const getPatrimonioServicebyTask = async (task_id, registration) => {
+
+  let rows = await pool.query(`Select
+  *,
+  created AS service_created
+  From task_service
+  tasks WHERE task_id = ? AND registration = ? ORDER BY created DESC`, [task_id, registration]);
+
+  if (rows.length > 0) return rows;
+  return false;
+
+};
+
 
 const getTaskData = async (task_id) => {
 
@@ -109,8 +118,45 @@ const getTaskData = async (task_id) => {
  
   };
 
+  const getCompleteTask = async (start, end) => {
+    let rows = await pool.query(`Select
+    *,
+    tasks.created as created_task,
+    tasks.updated as updated_task
+    From
+    tasks Inner Join
+    servidores On servidores.id = tasks.id_servidor WHERE tasks.status = 'complete' AND (tasks.updated BETWEEN ? AND ?) `, [start, end]);
+    if (rows.length > 0) return rows;
+    return false;
+   
+   /* if (rows.length > 0) return   res.json(rows);
+    return res.json({status: "Sorry! Not found."});*/
+ 
+  };
+
+
   const getTaskPatrimonio = async (id) => {
     let rows = await pool.query(`SELECT * FROM task_patrimonio WHERE id = ?`, [id]);
+    if (rows.length > 0) return rows;
+    return false;
+   
+   /* if (rows.length > 0) return   res.json(rows);
+    return res.json({status: "Sorry! Not found."});*/
+ 
+  };
+
+  const getTaskPatrimoniobyIdTask = async (task_id) => {
+    let rows = await pool.query(`SELECT * FROM task_patrimonio WHERE task_id = ?`, [task_id]);
+    if (rows.length > 0) return rows;
+    return false;
+   
+   /* if (rows.length > 0) return   res.json(rows);
+    return res.json({status: "Sorry! Not found."});*/
+ 
+  };
+
+  const getService = async (id) => {
+    let rows = await pool.query(`SELECT * FROM task_service WHERE id = ?`, [id]);
     if (rows.length > 0) return rows;
     return false;
    
@@ -238,13 +284,17 @@ const getServidor = async (id_servidor) => {
   
 
   module.exports = {
+  getService,
+  getPatrimonioServicebyTask,
   getMyTask,
   getTaskCount,
   getTasktecnicos,
   getTask,
   getNotesHistory,
   getTecnico,
+  getCompleteTask,
   getTaskPatrimonio,
+  getTaskPatrimoniobyIdTask,
   getTaskData,
   getTaskHistory,
   getServidor,

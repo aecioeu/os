@@ -44,14 +44,41 @@ router.post('/mytasks', async function (req, res) {
 })
 
 router.get('/patrimonio/:task_id', async function (req, res) {
+  
 
   const task_id = req.params.task_id
-  let rows = await pool.query("SELECT * FROM task_patrimonio WHERE task_id = ?", [task_id]);
+  let rows = await pool.query(`SELECT * FROM task_patrimonio WHERE task_id = ?`, [task_id]);
   // if (rows.length > 0) return   res.json(rows);
   // return res.json({status: "Sorry! Not found."});
+
+  if (rows.length > 0) {
+
+    const tasks = [] 
+
+    for (const row of rows) {
+      var services = await db.getPatrimonioServicebyTask(row.task_id, row.registration)
+      row.services = services
+      tasks.push(row)
+    }
+
+  //return tasks
+
+  
+  res.json({
+    "data": tasks
+  });
+
+  }else{
+
+    
    res.json({
-        "data": rows
-      });
+    "data": rows
+  });
+
+
+  }
+
+
 
 })
 

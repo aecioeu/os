@@ -20,6 +20,9 @@ module.exports = function (app, passport) {
 
     const api_tasks = require('./controllers/api/tasks/index.js');
     app.use('/api/tasks', api_tasks);
+
+    const api_whatsapp = require('./controllers/api/whatsapp/index.js');
+    app.use('/api/whatsapp', api_whatsapp);
     
     const tasks = require('./controllers/tasks/index.js');
     app.use('/tasks', tasks);

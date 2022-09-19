@@ -8,6 +8,7 @@ $(document).ready(function() {
 
 
 
+
         $(document).on('select2:open', () => {
             document.querySelector('.select2-search__field').focus();
         });
@@ -51,10 +52,33 @@ $(document).ready(function() {
 
   .on('select2:select', function (e) {
       var data = e.params.data;
-      console.log(data);
+     
       $("#destiny").text(data.location)
-       $("#contato").val(data.phone)
+       var contato = $("#contato").val(data.phone).mask("(99) 99999-999?9")
+       checkWhatsapp(data.phone)
   });
+
+
+$(document).ready(function() {
+
+if($(".contato")){
+
+$(".contato").mask("(99) 9999-9999?9").focusout(function(event) {
+  var target, phone, element;
+  target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+  phone = target.value.replace(/\D/g, '');
+  element = $(target);
+  element.unmask();
+  if (phone.length > 10) {
+      element.mask("(99) 99999-999?9");
+      checkWhatsapp(phone)
+  } else {
+      element.mask("(99) 9999-9999?9");
+  }
+});
+}
+
+});
 
   
 

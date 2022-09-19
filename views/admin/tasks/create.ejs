@@ -117,17 +117,29 @@
                             <label class="form-label" for="servidor">Solicitante</label>
 
                           
-                              <select class="form-select" name="servidor" data-plugin="select_servidores">
+                              <select class="form-select" name="servidor" data-plugin="select_servidores" required>
                               </select>
+                             
 
                             </div>
                             <div class="col-lg-4">
 
                             <label class="form-label" for="example-helping">Contato</label>
                           
-                              <input type="text" class="form-control" name="contato" id="contato" placeholder="" parsley-trigger="change" required >
+                              
+                              <div class="input-group">
+                                <div class="input-group-text">?</div>
+                                <input type="text" class="form-control contato" name="contato" id="contato" pattern="\d+((\(|)|-)\d+)?" inputmode="numeric" placeholder="" parsley-trigger="change" required  >
+                            </div>
+                        
                               <span class="help-block">
-                                <small> Whatsapp para ser notificado</small>
+                                <div class="form-switch mb-2">
+                                  <input type="checkbox" class="form-check-input" id="notify" name="notify" checked> 
+                                  <label class="form-check-label" for="notify">Notificar por Whatsapp</label>
+                              </div>
+
+                              <input type="hidden"  id="whatsapp" name="whatsapp" > 
+                               
                               </span>
                             </div>
                         
@@ -136,12 +148,12 @@
                           <div class="mb-1 row">
                             <div class="col-lg-6">
                               <label class="form-label" for="destino">Local / Destino da Prestação de Serviço</label>
-                                 <textarea class="form-control" rows="3" name="destiny" id="destiny"></textarea>
+                                 <textarea class="form-control" rows="3" name="destiny" id="destiny" required></textarea>
                             </div>
                          
                             <div class="col-lg-6">
                               <label class="form-label" for="destino">Descrição do Problema</label>
-                                 <textarea class="form-control" rows="3" name="problem" id="problem"></textarea>
+                                 <textarea class="form-control" rows="3" name="problem" id="problem" required></textarea>
                             </div>
                           </div>
 
@@ -182,10 +194,18 @@
           </div>
 
           <%- include('../partials/footer') %>
+          <script src="/js/masked.js"></script>
+          <script src="/js/wp.init.js"></script>
+          <script src="/js/tasks.init.js"></script>
+       
 
      <!-- Plugin js-->
      <script src="/js/parsley.min.js"></script>
-     <script src="/js/tasks.init.js"></script>
+     
+      <script>
+
+        
+      </script>
 
   </body>
   <!-- END: Body-->

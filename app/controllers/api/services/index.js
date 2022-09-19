@@ -31,16 +31,14 @@ router.post('/delete', async function (req, res) {
     task_id : dados.task_id
   }
 
-  var patrimonio = await db.getTaskPatrimonio(dados.id)
+  var service = await db.getService(dados.id)
 
-  console.log(patrimonio)
-
-  if(patrimonio){
-    db.insertHistory("task", `Patrimônio Apagado da Tarefa` , `${req.user.name} apagou o patrimonio nº ${patrimonio[0].registration} - ${patrimonio[0].name} da tarefa.`, req.user.id, dados.task_id)
+  if(service){
+    db.insertHistory("task", `Serviço Apagado da Tarefa` , `${req.user.name} apagou o serviço ${service[0].service} da tarefa.`, req.user.id, dados.task_id)
   }
 
   if (dados.id) {
-    pool.query("DELETE FROM task_patrimonio WHERE id = ? AND task_id = ?", [
+    pool.query("DELETE FROM task_service WHERE id = ? AND task_id = ?", [
      dados.id,
      dados.task_id,
     ]);
@@ -54,6 +52,11 @@ router.post('/delete', async function (req, res) {
 
 
 })
+  
+
+
+
+
 
 
 router.get('/about', function (req, res) {

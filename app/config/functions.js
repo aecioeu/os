@@ -1,6 +1,11 @@
 async function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  
   
   function rand(timems) {
     var min = timems,
@@ -36,6 +41,7 @@ async function delay(ms) {
 
 
   module.exports = {
+    capitalizeFirstLetter,
     isLoggedIn,
     rand,
     delay,

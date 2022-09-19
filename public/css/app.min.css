@@ -140,10 +140,10 @@ body::-webkit-scrollbar-thumb {
 
 .task-box{
  /* background-color: #f8f9fa;
-    border-color: #f8f9fa;*/
-    padding: 7px;
+    border-color: #f8f9fa;
+    padding: 7px;*/
     border-radius: 10px;
-    margin-left: 10px;
+
 }
 .comment-area-box .form-control {
   border: 1px solid #e2e7f1 !important;
@@ -301,6 +301,13 @@ span[aria-expanded="true"]{
 .ml-1{
   margin-left: 5px;
 }
+.ml-2{
+  margin-left: 10px;
+}
+.ml-3{
+  margin-left: 15px;
+}
+
 
 .custom-option-item-check {
   position: absolute;

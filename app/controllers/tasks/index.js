@@ -2,13 +2,98 @@ const express = require('express');
 const router = express.Router();
 
 var pool = require("../../config/pool-factory");
-var {makeid, rand, delay} = require("../../config/functions");
+var {makeid, rand, delay, capitalizeFirstLetter} = require("../../config/functions");
 var db = require('../../config/db')
 
 var moment = require('moment'); // require
 
 
 const { isLoggedIn } = require('../../config/functions')
+
+//whatsapp client
+const client = require("../../config/wpp");
+const { sendMsg }  = require('../../config/senderHelper')
+
+
+async function lembrete(){
+
+
+  var  start = moment().subtract(1, 'd').format("YYYY-MM-DD 00:00:00"),
+  end = moment().format("YYYY-MM-DD 23:59:59")
+  
+  console.log(start,end)
+  
+  var completeTasks = await db.getCompleteTask(start, end)
+  
+  //console.log('completed' , completeTasks)
+
+        if(completeTasks){
+
+            for (const task of completeTasks) {
+              console.log('analisando ' + task.task_id)
+            
+              
+              var solicitante = task.name.split(' ')
+              const task_patrimonio = await db.getTaskPatrimoniobyIdTask(task.task_id)
+          
+
+              try {
+
+              if(task_patrimonio){
+
+              let tpl = ''
+              task_patrimonio.forEach(function (patrimonio, index) {
+              
+                  tpl += `_- ${patrimonio.registration} - ${patrimonio.name}_\n`
+              })
+
+        
+                await sendMsg(
+                 {
+                   type: "text",
+                   message: `*${capitalizeFirstLetter(solicitante[0].toLowerCase())}*, você ainda não buscou os itens 😅 aqui no CPD.
+                   \n${tpl}
+                   \nJá estão prontos 🥳, aguardando sua retirada.
+                   \n*Providencie a retirada o mais breve possivel.*
+                   \n\n_👉Mensagem automática, não é necessario responder._
+                   `,
+                   from: task.whatsapp,
+                 },
+                 client
+               );
+
+              }
+             
+               
+              } catch (error) {
+               console.log('erro ao enviar' , error)
+              }
+               // console.log(task.task_id)
+
+
+               await delay(2000);
+               console.log('aguardando - ' + moment().format("YYYY-MM-DD HH:mm"))
+
+                
+            } // fim do for
+  }
+
+}
+
+
+
+
+var cron = require('node-cron');
+
+cron.schedule('*/5 * * * *', async () => {
+  console.log('running a task every 5 minutes');
+
+  lembrete()
+
+
+});
+
+
 
 // Estrutura /TASKS
 
@@ -41,18 +126,22 @@ router.get('/create', isLoggedIn, function (req, res) {
 
 router.post('/create', isLoggedIn, async function (req, res) {
 
+  
+
 const dados = req.body
 const task_id = makeid(5)
 
-let user = req.user.id
+console.log(dados)
 
+let user = req.user.id
 
 var data = {
   task_id: task_id,
   id_servidor: dados.servidor,
   location: dados.destiny,
   contato: dados.contato,
-  whatsapp: "",
+  whatsapp: dados.whatsapp,
+  notification : (dados.notify) ? dados.notify : 'off',
   description: dados.problem,
   priority: dados.priority,
   id_tecnicos : user.id,
@@ -61,9 +150,11 @@ var data = {
 };
 
 
+
+
 await pool.query(
-  "UPDATE servidores SET phone = ? WHERE id = ?",
-  [dados.contato, dados.servidor]
+  "UPDATE servidores SET phone = ? , whatsapp = ? WHERE id = ?",
+  [dados.contato, dados.whatsapp, dados.servidor]
 );
 
 await pool.query("INSERT INTO tasks SET ?", data, function (err, result) {
@@ -97,13 +188,14 @@ console.log(dados)
 
 
 var data = {
+  task_id: task_id,
   id_servidor: dados.servidor,
   location: dados.destiny,
   contato: dados.contato,
-  whatsapp: "",
+  whatsapp: dados.whatsapp,
+  notification : (dados.notify) ? dados.notify : 'off',
   description: dados.problem,
   priority: dados.priority,
-  id_tecnicos : user.id,
   type: dados.tipo
 };
 
@@ -165,6 +257,36 @@ router.post('/note', async function (req, res) {
       
 })
 
+
+router.post('/services', async function (req, res) {
+
+
+  const dados = req.body
+    var data = {
+      task_id: dados.task_id,
+      registration: dados.id_patrimonio,
+      description : dados.description,
+      service : dados.id_service,
+      tecnico_name: req.user.name,
+      id_tecnicos: req.user.id
+    
+    };
+
+      
+
+  await pool.query("INSERT INTO task_service SET ?", data, function (err, result) {
+    if(err) console.log(err)
+        //atualizar o servidor como o telefone
+      
+        //res.redirect('/tasks/edit/' + task_id);
+        res.send({status: "added"})
+      
+      });
+
+      
+})
+
+
 router.get('/invite/:task_id', isLoggedIn, async function (req, res) {
   //res.send('Service home page');
 
@@ -215,6 +337,67 @@ router.get('/complete/:task_id', isLoggedIn, async function (req, res) {
 
   const task_id = req.params.task_id
   const data = await db.getTaskData(task_id)
+  const task_patrimonio = await db.getTaskPatrimoniobyIdTask(task_id)
+
+  var solicitante = data[0].name.toString().split(' ')
+
+
+
+let tpl = ''
+task_patrimonio.forEach(function (patrimonio, index) {
+
+    tpl += `_- ${patrimonio.registration} - ${patrimonio.name}_\n`
+})
+
+
+  if(data[0]){
+
+  var tecnico = {
+    id_tecnico : req.user.id,
+    name : req.user.name,
+    task_id : data[0].task_id
+
+   }
+
+   try {
+     sendMsg(
+      {
+        type: "text",
+        message: `*${capitalizeFirstLetter(solicitante[0].toLowerCase())}*, o CPD da Prefeitura tem um recado importante para você.
+        \nOs itens:
+        \n${tpl}
+        \nJá estão prontos 🥳, aguardando sua retirada.
+        \n*Providencie a retirada o mais breve possivel.*
+        \n\n_👉Mensagem automática, não é necessario responder._
+        `,
+        from: data[0].whatsapp,
+      },
+      client
+    );
+  
+    
+   } catch (error) {
+    console.log('erro ao enviar')
+   }
+  
+  /* await pool.query(
+    "UPDATE tasks SET status = ? WHERE task_id = ?",
+    ['complete', data[0].task_id]
+  );
+
+  db.insertHistory("task", `${req.user.name} concluiu a tarefa ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , ``, req.user.id, task_id)
+  */res.redirect('/tasks/view/' + task_id);
+
+}
+
+})
+
+
+router.get('/archive/:task_id', isLoggedIn, async function (req, res) {
+  //res.send('Service home page');
+
+  const task_id = req.params.task_id
+  const data = await db.getTaskData(task_id)
 
 
   if(data[0]){
@@ -228,10 +411,10 @@ router.get('/complete/:task_id', isLoggedIn, async function (req, res) {
 
    await pool.query(
     "UPDATE tasks SET status = ? WHERE task_id = ?",
-    ['complete', data[0].task_id]
+    ['archive', data[0].task_id]
   );
 
-  db.insertHistory("task", `${req.user.name} concluiu a tarefa ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , ``, req.user.id, task_id)
+  db.insertHistory("task", `${req.user.name} concluiu e arquivou a tarefa ${moment().format('DD/MM/YYYY')} às ${moment().format('HH:mm')}.` , ``, req.user.id, task_id)
   res.redirect('/tasks/view/' + task_id);
 
 }

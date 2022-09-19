@@ -413,7 +413,8 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
       console.log("erro ao enviar");
     }
 
-    await db.updateTaskDate(task.task_id, `${moment(date).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}`)
+    var date = new Date();
+    await db.updateTaskDate(data[0].task_id, `${moment(date).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}`)
 
     await pool.query("UPDATE tasks SET status = ? WHERE task_id = ?", [
       "complete",

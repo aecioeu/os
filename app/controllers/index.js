@@ -4,6 +4,10 @@ const { isLoggedIn } = require('../config/functions')
 
 //Estrutura /
 
+router.get("/", isLoggedIn, async function (req, res, next) {
+  res.redirect("/dashboard");
+});
+
 router.get("/register", async function (req, res, next) {
   res.render("admin/register.ejs");
 });
@@ -41,6 +45,7 @@ router.post(
     });
   }
 );
+
 
 
 

@@ -342,6 +342,33 @@ router.post("/services", async function (req, res) {
   );
 });
 
+
+router.post("/sign", async function (req, res) {
+  const dados = req.body;
+  var data = {
+    task_id: dados.task_id,
+          id_servidor : dados.id_servidor,
+          sign_registration: dados.sign_registration, 
+          sign_name: dados.sign_name, 
+          sign_phone: dados.sign_phone,
+          sign_whatsapp: dados.sign_whatsapp,
+          sign_type: 'papper',
+          tecnico_name: req.user.name,
+  };
+
+  await pool.query(
+    "INSERT INTO task_sign SET ?",
+    data,
+    function (err, result) {
+      if (err) console.log(err);
+      //atualizar o servidor como o telefone
+
+      //res.redirect('/tasks/edit/' + task_id);
+      res.send({ status: "signed" });
+    }
+  );
+});
+
 router.get("/takeaway/:task_id", isLoggedIn, async function (req, res) {
   //res.send('Service home page');
   const task_id = req.params.task_id;

@@ -728,11 +728,9 @@ await sendMessage({
           id_servidor : $('[data-plugin="select_servidores"]').select2('data')[0].id,
           sign_registration: $('[data-plugin="select_servidores"]').select2('data')[0].registration, 
           sign_name: $('[data-plugin="select_servidores"]').select2('data')[0].name, 
-          sign_phone: $('[name="ref_patrimonio"]').val(),
-          sign_whatsapp: $("textarea#service").val(),
+          sign_phone: $('[name="contato"]').val(),
+          sign_whatsapp: '',
           sign_type: 'papper',
-          tecnico_name: '<%-user.name%>'
-
         }
 
         $.ajax({
@@ -747,13 +745,6 @@ await sendMessage({
 
               //window.location.href = '/tasks/archive/<%-data.task_id-%>'
 
-            
-
-              //patrimonio_vinculado_wrapper
-
-              //alert("Nota inserida.")
-              //$("textarea#description").val('')
-             // NotesLoad('<%- data.task_id %>')
             }
 
             

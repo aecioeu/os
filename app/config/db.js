@@ -200,6 +200,20 @@ const getTaskData = async (task_id) => {
  
   };
 
+  
+  const getTaskSign = async (task_id) => {
+
+    let rows = await pool.query(`SELECT * FROM task_sign WHERE task_id = ? ORDER BY created DESC LIMIT 0,1`, [task_id]);
+    if (rows.length > 0) return rows;
+    return false;
+   
+   /* if (rows.length > 0) return   res.json(rows);
+    return res.json({status: "Sorry! Not found."});*/
+ 
+  };
+
+  
+
 
   const getNotesHistory = async (task_id) => {
  
@@ -295,6 +309,7 @@ const getServidor = async (id_servidor) => {
   
 
   module.exports = {
+    getTaskSign,
   getService,
   getPatrimonioServicebyTask,
   getMyTask,

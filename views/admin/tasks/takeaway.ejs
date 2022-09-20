@@ -316,6 +316,8 @@ tbody, td, tfoot, th, thead, tr {
                         </div> <!-- end col -->
                       </div>
                       <!-- end row -->
+                      <%if(taskSign != false){%>
+ASSINADA
 
                       <div class="row">
                         <div class="col-sm-12">
@@ -323,14 +325,14 @@ tbody, td, tfoot, th, thead, tr {
                                 <h6 class="text-muted">Termo de Recebimento e Retirada:</h6>
 
                                 <small class="text-muted">
-                                    Eu, <span class="name"></span></pan> confirmo que recebi os patrimônios acima identificados, por ser verdade firmo o presente, Lagoa da Prata, <span class="date"></span>.
+                                    Eu, <%-taskSign[0].sign_name.toUpperCase()%></pan> confirmo que recebi os patrimônios acima identificados, por ser verdade firmo o presente, Lagoa da Prata, <span class="date"></span>.
                                 </small>
                             </div>
                         </div> <!-- end col -->
                         <div class="col-sm-6">
                             <div class="mt-4 text-center">
                                 <p><span class="fw-medium m-0 font-dark">____________________________________________</span> </p>
-                                <p><h6 class="fs-15 mt-0 mb-1"><span class="name"></span></h6></p>
+                                <p><h6 class="fs-15 mt-0 mb-1"><%-taskSign[0].sign_name.toUpperCase()%></h6></p>
                                
                             </div>
                             <div class="clearfix"></div>
@@ -338,14 +340,18 @@ tbody, td, tfoot, th, thead, tr {
                         <div class="col-sm-6">
                           <div class="mt-4 text-center">
                               <p><span class="fw-medium m-0 font-dark">____________________________________________</span> </p>
-                              <p><h6 class="fs-15 mt-0 mb-1"><%-user.name.toUpperCase()%> - C.P.D</h6></p>
+                              <p><h6 class="fs-15 mt-0 mb-1"><%-data.name.toUpperCase()%> - C.P.D</h6></p>
                              
                           </div>
                           <div class="clearfix"></div>
                       </div> <!-- end col -->
                     </div>
+                 
+                     
+                      
+                      <%}else{%>
 
-                      <!-- end row -->
+                        <!-- end row -->
                       <div class="mb-1 row not-print">
                         <div class="col-lg-8">
                           <h5 class="mt-2 bold">RECEBEDOR</h5>
@@ -369,7 +375,37 @@ tbody, td, tfoot, th, thead, tr {
 
 
                       </div>
+                        
+                        
+                        <div class="row">
+                          <div class="col-sm-12">
+                              <div class="clearfix">
+                                  <h6 class="text-muted">Termo de Recebimento e Retirada:</h6>
+  
+                                  <small class="text-muted">
+                                      Eu, <span class="name"></span></pan> confirmo que recebi os patrimônios acima identificados, por ser verdade firmo o presente, Lagoa da Prata, <span class="date"></span>.
+                                  </small>
+                              </div>
+                          </div> <!-- end col -->
+                          <div class="col-sm-6">
+                              <div class="mt-4 text-center">
+                                  <p><span class="fw-medium m-0 font-dark">____________________________________________</span> </p>
+                                  <p><h6 class="fs-15 mt-0 mb-1"><span class="name"></span></h6></p>
+                                 
+                              </div>
+                              <div class="clearfix"></div>
+                          </div> <!-- end col -->
+                          <div class="col-sm-6">
+                            <div class="mt-4 text-center">
+                                <p><span class="fw-medium m-0 font-dark">____________________________________________</span> </p>
+                                <p><h6 class="fs-15 mt-0 mb-1"><%-user.name.toUpperCase()%> - C.P.D</h6></p>
+                               
+                            </div>
+                            <div class="clearfix"></div>
+                        </div> <!-- end col -->
+                      </div>
 
+                        <%}%>
                      
 
                      
@@ -379,8 +415,8 @@ tbody, td, tfoot, th, thead, tr {
                           <a href="javascript:window.print()" class="float-start btn btn-primary">
                             <i class="uil uil-print me-1"></i> Imprimir Termo de Entrega</a>
                            
-
-                            <%if(assigned == true && data.status == "complete"){%>
+                            <a href="/tasks/edit/<%-data.task_id-%>" class="btn btn-soft-dark">Editar Tarefa</a>
+                            <%if(assigned == true && data.status == "complete" && taskSign == false){%>
                               <%if(data.type != "out"){%>
                                 <button onclick="requestPermission()" class="btn btn-danger">Concluir e Arquivar esta Tarefa</button>
                                  
@@ -742,12 +778,8 @@ await sendMessage({
           success: function(response) {
 
             if(response.status == 'signed'){
-
-              //window.location.href = '/tasks/archive/<%-data.task_id-%>'
-
+              window.location.href = '/tasks/archive/<%-data.task_id-%>'
             }
-
-            
 
           },
           error: function(errMsg) {

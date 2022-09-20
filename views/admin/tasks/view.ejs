@@ -390,6 +390,8 @@
                           <%if(data.status != "complete"){%>
                           <a href="javascript:window.print()" class="float-start btn btn-primary">
                             <i class="uil uil-print me-1"></i> Imprimir Tarefa</a><%}%>
+                           
+                           
                             <a href="/tasks/edit/<%-data.task_id-%>" class="btn btn-soft-dark">Editar Tarefa</a>
 
                             <%if(assigned == true && data.status != "complete"){%>

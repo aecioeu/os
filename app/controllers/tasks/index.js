@@ -375,6 +375,8 @@ router.get("/takeaway/:task_id", isLoggedIn, async function (req, res) {
   const data = await db.getTaskData(task_id);
   const taskHistory = await db.getTaskHistory(task_id);
   const taskTecnico = await db.getTasktecnicos(task_id);
+  const taskSign = await db.getTaskSign(task_id);
+  console.log(taskSign)
 
   var assingned = false;
   if (taskTecnico) {
@@ -387,7 +389,9 @@ router.get("/takeaway/:task_id", isLoggedIn, async function (req, res) {
     data: data[0],
     task_history: taskHistory,
     task_tecnico: taskTecnico,
+    taskSign: taskSign,
     assigned: assingned,
+    
   });
 });
 
@@ -530,7 +534,13 @@ router.get("/archive/:task_id", isLoggedIn, async function (req, res) {
   let tasksCount = await db.getTaskCount();
   io.sockets.emit('getCountTasks', tasksCount);  
 
-    res.redirect("/tasks/view/" + task_id);
+    if(data[0].type == 'in'){
+      res.redirect("/tasks/takeaway/" + task_id);
+    }else{
+      res.redirect("/tasks/view/" + task_id);
+    }
+    
+    
   }
 });
 

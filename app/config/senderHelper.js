@@ -61,7 +61,7 @@ const sendMsg = async (payload, client) => {
   
       case "button2":
         var templateButtons = [];
-        console.log(payload.from)
+        
         payload.buttons.forEach(function (button, i) {
           templateButtons.push({
             index: i + 1,

@@ -13,7 +13,7 @@ const sendMessage = async (data) => {
 };
 
 const sendButtonMessage = async (data) => {
-  const response = await fetch("/api/whatsapp/send", {
+  const response = await fetch("/api/whatsapp/send-button", {
     method: "POST",
     body: JSON.stringify(data), // string or object
     headers: {

@@ -11,7 +11,9 @@ var pool = require("../../../config/pool-factory");
 //whatsapp
 var client = require("../../../config/wpp");
 const { sendMsg }  = require('../../../config/senderHelper')
-  
+
+
+
 
 router.post('/check', async function (req, res) {
 
@@ -35,6 +37,31 @@ router.post('/check', async function (req, res) {
 })
 
 
+
+
+router.post("/assing-message", async function (req, res, next) {
+
+  const body = req.body
+  console.log(body)
+
+     /* await sendMsg(
+              {
+              type: body.type,
+              message: body.message,
+              from: body.from,
+              footer: (body.footer) ? body.footer : '',
+              buttons : body.buttons
+              },
+              client
+          );*/
+
+          
+  return res.status(200).json({
+    status: false,
+    message: "404 - Não existe",
+  });
+
+})
 
 router.post("/send", async function (req, res, next) {
 

@@ -22,7 +22,12 @@ var fileStoreOptions = {};
 const app = express();
 const port = process.env.PORT || 80;
 
-const socket = require("socket.io");
+const socket = require("socket.io", {
+  cors: {
+    origin: '*',
+  }
+});
+
 
 const compression = require('compression')
 app.use(compression());
@@ -66,14 +71,19 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 require('./app/config/passport')(app, passport); // pass passport for configuration
 // routes ======================================================================
 
-require("./app/routes.js")(app, passport); 
+
 
 
 
 var server = app.listen(port);
 console.log('The magic happens on port ' + port);
 
-const io = socket(server);
+global.io = socket(server);
+
+require("./app/routes.js")(app, passport); 
+//global.io = require('socket.io').listen(server);
+
+
 
 /*
 var clients = {}; 
@@ -108,99 +118,39 @@ io.on("connection", function (client) {
 });
 */
 
-
-var activeUsers = new Set()
+/*
+var users = {}
 
 
 io.on("connection", function (socket) {
-  console.log("Made socket connection");
+  
+  console.log('👾 New socket connected! >>', socket.id)
+  //io.sockets.emit('getCountTasks', 'clients');
 
-  socket.on("new user", function (data) {
-    socket.userId = data;
-    activeUsers.add(data);
-    io.emit("new user", [...activeUsers]);
-  });
+
+  socket.on('new-connection', (data) => {
+    // captures event when new clients join
+    console.log(`new-connection event received`, data)
+    // adds user to list
+    users[socket.id] = data.username
+    console.log('users :>> ', users)
+    // emit welcome message event
+    socket.emit('welcome-message', {
+      user: 'server',
+      message: `Welcome to this Socket.io chat ${data.username}. There are ${
+        Object.keys(users).length
+      } users connected`,
+    })
+    
+  })
+
 
   socket.on("disconnect", () => {
-    activeUsers.delete(socket.userId);
-    io.emit("user disconnected", socket.userId);
+    //delete users[socket.id];
+    io.emit("user disconnected", socket.id);
   });
-});
-
-setInterval(() => {
-  console.log(activeUsers)
-  
-}, 1000);
- 
-
-/*
-connectToWhatsApp();
-//start("");
-async function start(client) {
-  app.listen(config.port, async function () {
-
-    
-   
-   var fs = require('fs');
-
-if (!fs.existsSync('./sessions')){
-    fs.mkdirSync('./sessions', { recursive: true });
-}
-    //await init(); // inicia o treino da IA
-    console.log("Servidor Iniciado e escutando na porta " + config.port);
-  });
-
-  require("./app/routes.js")(app, passport); // load our routes and pass in our app and fully configured passport
-  // end start
-}
-
-async function connectToWhatsApp() {
-  const client = makeWAclientet({
-    //logger: P({ level: 'debug' }),
-    auth: state,
-    printQRInTerminal: true,
-    version: [2, 2204, 13], 
-  });
-
-  await start(client);
-  
-
-  client.ev.on("connection.update", (update) => {
-    const { connection } = update;
-    if (connection === "close") {
-      console.log("closed connection ");
-     
-      process.exit( );
+});*/
 
 
-    } else if (connection === "open") {
-      console.log("opened connection");
-    }
-  });
-
-  //const botNumber = client.user.id.includes(':') ? client.user.id.split(':')[0] + '@s.whatsapp.net' : client.user.id
-
-  client.ev.on("messages.upsert", async (m) => {
-    const msg = m.messages[0];
-    if (
-      !msg.key.fromMe &&
-      m.type === "notify" &&
-      m.messages[0].key.remoteJid !== "status@broadcast"
-    ) {
-      console.log("Enviando mensagem para: ", m.messages[0].key.remoteJid);
-      await processMessage(msg, client);
-    }
-  });
-
-
-
-  //client.ev.on("presence.update", (m) => console.log(m));
-  //client.ev.on("chats.update", (m) => console.log(m));
-  //client.ev.on("contacts.update", (m) => console.log(m));
-
-  client.ev.on("creds.update", saveState);
-}
-
-*/
 
 

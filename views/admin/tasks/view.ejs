@@ -22,6 +22,11 @@
       margin-left: 0px;
     }
 
+    .noprint{
+      display: none !important;
+    }
+
+
   }
 
   .offcanvas-end{
@@ -120,20 +125,7 @@
 
  <!-- FINALIZAR TAREFA-->
 
-      <div class="offcanvas offcanvas-bottom message" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasTopLabel">
-        <div class="offcanvas-header mb-0">
-            <h5 id="offcanvasBottomLabel  fs-17"><%-user.name%>, você esta prestes a finalizar a tarefa #<%-data.task_id%></h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div>
-                Ao finalizar está tarefa, o solicitante, sera notificado via whatsapp e a tarefa sera concluida, aguardando a retirada dos  patrimônios no CPD.
-            </div>
-            <div class="float-end mt-3">
-              <a href="/tasks/complete/<%-data.task_id-%>" class="btn btn-danger">Concluir a Tarefa</a>
-            </div>
-        </div>
-    </div>
+ 
        
        
        
@@ -165,9 +157,17 @@
                 <div class="card-body">
 
                   <%if(assigned == false){%>
-                  <a href="/tasks/invite/<%-data.task_id-%>" class="alert btn btn-soft-danger d-block mb-2 bold">ASSUMIR ESTÁ TAREFA</a>
+                  <a href="/tasks/invite/<%-data.task_id-%>" class="noprint alert btn btn-soft-danger d-block mb-2 bold">ASSUMIR ESTA TAREFA</a>
         
                   <%}%>
+                  <%if(data.status == "archive"){%>
+                  <div class="alert alert-danger" role="alert">
+                    Essa tarefa está arquivada
+                   </div>
+                    <%}%>
+
+
+                  
 
                   <ul class="nav nav-pills navtab-bg nav-justified p-1" id="pills-tab" role="tablist">
 
@@ -392,24 +392,18 @@
 
                             <%if(assigned == true && data.status != "complete"){%>
                               <%if(data.type != "out"){%>
-                                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasTop">Finalizar Tarefa</button>
+                                <button class="btn btn-primary" type="button" onclick="check('<%-user.name%>, ao finalizar está tarefa, o solicitante, será notificado via whatsapp e a tarefa será <b>concluida</b>, e ficara aguardando a retirada dos patrimônios no CPD.', '/tasks/complete/<%-data.task_id-%>')">Finalizar Tarefa</button>
                             
-                              <% } else {  %>
-                                    <a href="/tasks/archive/<%-data.task_id-%>" class="btn btn-danger">Concluir e Arquivar Tarefa</a>
+                              <% } else if(data.status != "archive") {  %>
+                                    <button type="button" onclick="check('<%-user.name%>, tem certeza que deseja concluir esta tarefa ?', '/tasks/archive/<%-data.task_id-%>')" class="btn btn-danger">Concluir e Arquivar Tarefa</button>
                                  
     
-                                    <%}%>
+                                 <%}%>
                              
                               <%}  else if(data.status == "complete") {%>
-                                <div class="btn-group me-1">
-                                  <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Realizar Entrega <i class="icon"><span data-feather="chevron-down"></span></i>
-                                  </button>
-                                  <div class="dropdown-menu dropdown-menu-end" style="">
-                                      <a class="dropdown-item" href="#">Validar por Whatsapp</a>
-                                      <a class="dropdown-item" href="#">Validar por assinatura</a>
-                                  </div>
-                              </div>
+
+                                <a href="/tasks/takeaway/<%-data.task_id-%>" class="btn btn-success">Realizar Entrega</a>
+                             
                                                       
                                 <%} %>
                         </div>
@@ -583,6 +577,34 @@
     
 
     <script>
+
+
+
+function check(message, url){
+
+  bootbox.confirm({
+    message: message,
+    buttons: {
+        confirm: {
+            label: 'Sim',
+            className: 'btn-success'
+        },
+        cancel: {
+            label: 'Não, não tenho certeza.',
+            className: 'btn-danger'
+        }
+    },
+    callback: function (result) {
+
+        if(result){
+          window.location.href = url
+        }
+    }
+});
+
+  //href="/tasks/complete/<%-data.task_id-%>"
+
+}
 
 
 

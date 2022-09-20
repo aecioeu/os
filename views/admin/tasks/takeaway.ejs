@@ -5,6 +5,10 @@
 
 <!-- BEGIN: Body-->
 <style>
+  @page {
+  size: A4;
+  margin: 15px;
+}
   @media print {
 
     body{
@@ -13,7 +17,41 @@
     .select2 , .tasks_notes{
       display: none !important
     }
+    .not-print{
+      display: none;
+    }
 
+    .border-right{
+      border-right: 1px solid #ebeef5 !important;
+    }
+    hr:not([size]) {
+    height: 1px;
+    }
+
+  
+
+    .table > :not(:last-child) > :last-child > * {
+    border-bottom-color: #ebeef5;
+}
+
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ebeef5;
+    border-radius: 47px;
+}
+
+    hr {
+    margin: 1.5rem 0;
+    height: 10px;
+    border-bottom: 1px solid #ebeef5 !important;
+    
+    color: #000 !important;
+    background-color: #fff;
+    border: 0;
+    opacity: 1;
+}
     [data-bs-target="#offcanvasRight"]{
       display: none !important
 
@@ -21,6 +59,10 @@
     body{
       margin-left: 0px;
     }
+
+.header{
+  margin-top: 0.75rem !important;
+}
 
   }
 
@@ -51,92 +93,7 @@
     <!-- ============================================================== -->
     <div class="content-page">
       <div class="content">
-     
-       
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasTopLabel">
-          <div class="offcanvas-header  mb-0 pb-0">
-              <h5 id="offcanvasRightLabel">INSERIR SERVIÇO</h5>
-              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-
-            <label class="form-label fs-13 mt-2 mb-1">PATRIMÔNIO</label>
-            <h5 class="text-dark fs-17 mb-0 patrimonio_ref">
-              
-            </h5>
-          
-            <form action="#" id="services" method="post" class="parsley-examples">
-
-              <div class="mb-1 row">
-                
-                <div class="col-lg-12">
-               
-                  <select class="form-select" style="display:none" name="ref_patrimonio">
-                   
-                 
-                  </select>
-                </div>
-              </div>
-
-               <!-- end row -->
-            <div class="mb-1 row">
-              <div class="col-lg-12">
-                <label class="form-label fs-13 mt-2 mb-1">SERVIÇO EXECUTADO</label>
-
-
-
-                <select class="form-select" name="service" data-plugin="select_service">
-                </select>
-
-              </div>
-
-
-            </div>
-
-           
-
-
-              <div class="mb-1 row">
-                                         <div class="col-lg-12">
-                  <label class="form-label fs-13 mt-2 mb-1" for="destino">OBSERVAÇÃO</label>
-                     <textarea class="form-control" rows="3" name="service" id="service"></textarea>
-                </div>
-              </div>
-
-              
-              <div class="mt-3 mb-1">
-                <div class="text-end d-print-none">
-                  <button type="submit" class="btn btn-primary btn-block w-100 mb-0"><i class="uil uil-focus-add mr-2"></i>Inserir serviço</button>
-                   
-
-                   
-                </div>
-              </div>
-
-            </form>
-            
-          </div>
-      </div>
-
- <!-- FINALIZAR TAREFA-->
-
-      <div class="offcanvas offcanvas-bottom message" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasTopLabel">
-        <div class="offcanvas-header mb-0">
-            <h5 id="offcanvasBottomLabel  fs-17"><%-user.name%>, você esta prestes a finalizar a tarefa #<%-data.task_id%></h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div>
-                Ao finalizar está tarefa, o solicitante, sera notificado via whatsapp e a tarefa sera concluida, aguardando a retirada dos  patrimônios no CPD.
-            </div>
-            <div class="float-end mt-3">
-              <a href="/tasks/complete/<%-data.task_id-%>" class="btn btn-danger">Concluir a Tarefa</a>
-            </div>
-        </div>
-    </div>
-       
-       
-       
+      
         <!-- Start Content-->
         <div class="container-fluid">
 
@@ -144,7 +101,7 @@
           <div class="row">
             <div class="col-12">
               <div class="page-title-box">
-                <h4 class="page-title">Tarefa #<%- data.task_id %>
+                <h4 class="page-title">Entrega de Patrimonio
                 </h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb m-0">
@@ -169,31 +126,29 @@
         
                   <%}%>
 
-                  <ul class="nav nav-pills navtab-bg nav-justified p-1" id="pills-tab" role="tablist">
+          
+                  <div class="row header">
+                    <div class="col-sm-8 ">
+                      <h3 class="mt-1 logo-lg-text-dark"><img src="/img/logo-sm.svg" alt height="24"> CPD</h3>
+                      <small class="mt-1">
+                        Centro de Processamento de Dados
+                      </small>
+                     
+                   </div>
 
-                    <li class="nav-item">
-                      <a class="nav-link active" id="pills-tasks-tab" data-bs-toggle="pill" href="#pills-tasks" role="tab" aria-ntrols="pills-tasks" aria-selected="false">
-                        Tarefa
-                      </a>
-                    </li>
-                  
-                    <li class="nav-item">
-                      <a class="nav-link " id="pills-activity-tab" data-bs-toggle="pill" href="#pills-activity" role="tab" aria-controls="pills-activity" aria-selected="true">
-                        Atividade
-                      </a>
-                    </li>
-
-                 
-                  </ul>
-
-                  <div class="tab-content" id="pills-tabContent">
-
-
+                   <div class="col-sm-4 ">
+                     <small class="mt-1">
+                      Av. Joaquim Gomes Pererira, 823<br>
+                      Centro, Lagoa da Prata<br>
+                      Contato: (37) 3262 5903
+                    </small>
+                   
+                 </div>
               
-                    <div class="tab-pane fade active show" id="pills-tasks" role="tabpanel" aria-labelledby="pills-tasks-tab">
 
-
-
+               
+                  </div>
+                  <hr class="mt-2 mb-2">
                       <div class="row">
                         <div class="col-sm-8 border-right">
                           <!--  <h3 class="mt-1 logo-lg-text-dark"><img src="/img/logo-sm.svg" alt height="24"> CPD</h3>
@@ -202,9 +157,7 @@
                                   Centro, Lagoa da Prata<br>
                                   Contato: (37) 3262 5903
                                 </small>-->
-                                <%if(data.notification == 'on') { %>
-                                  <div class="badge bg-success float-end">Notificar via Whatsapp</div>
-                                  <%}%>
+                        
                          
 
                           <span class="fs-13 mt-2 mb-1">
@@ -213,11 +166,9 @@
                           <div class="task-box mb-1">
 
                             <h5 class="text-dark fs-17 mb-0">
-                              <%-data.registration%> - <%-data.name%> <span class="text-dark">(<%- data.phone %>)</span>
+                              <%-data.registration%> - <%-data.name%> <span class="text-dark"><%- data.phone %></span>
                             </h5>
-                            <p class="text-dark text-truncate mb-0"><span class="badge badge-soft-secondary mt-1">
-                                <%-data.role%>
-                              </span></p>
+                          
 
                           </div>
 
@@ -256,23 +207,14 @@
                               ⏱️
                               <span class="created_time mb-1"><%-data.created_task%></span>
                               
-                          <%if(data.priority == "2") { %>
-                            <div class="badge bg-success float-end"><i class="uil uil-stopwatch"></i>Prioridade Normal</div>
-                            <%}%>
-                            <%if(data.priority == "3") { %>
-                              <div class="badge bg-primary float-end"><i class="uil uil-stopwatch"></i>Prioridade Baixa</div>
-                              <%}%>
-
-                            <%if(data.priority == "1") { %>
-                              <div class="badge bg-danger float-end"><i class="uil uil-stopwatch"></i>Prioridade Alta</div>
-                              <%}%>
+                         
 
                             </span>
                           </div>
                         </div> <!-- end col -->
-                        <hr class="mt-2 m-2">
+                        
                       </div>
-
+                      <hr class="mt-2 mb-2">
 
                       <div class="row">
                         <div class="col-sm-7 border-right">
@@ -317,8 +259,8 @@
                         <div class="row">
                           <div class="col-md-12">
                             <hr class="mt-2 mb-2">
-                            <span class="fs-12 mt-2 mb-1 bold">
-                              Técnicos:
+                            <span class="fs-13 mt-2 mb-1">
+                              TÉCNICOS:
                             
                             </span>
 
@@ -328,9 +270,9 @@
   
                        
                              
-  
+                            <hr class="mt-2 mb-0">
                           </div> <!-- end col -->
-                          <hr class="mt-2 m-2">
+                         
   
   
   
@@ -346,7 +288,7 @@
 
 
                       <!-- end row -->
-                      <div class="mb-1 row">
+                      <div class="mb-0 row">
                         <div class="col-lg-12">
                           <h5 class="mt-2 bold">PATRIMONIO E SERVIÇOS</h5>
                         </div>
@@ -375,8 +317,36 @@
                       </div>
                       <!-- end row -->
 
+                      <div class="row">
+                        <div class="col-sm-12">
+                            <div class="clearfix">
+                                <h6 class="text-muted">Termo de Recebimento e Retirada:</h6>
+
+                                <small class="text-muted">
+                                    Eu, <span class="name"></span></pan> confirmo que recebi os patrimônios acima identificados, por ser verdade firmo o presente, Lagoa da Prata, <span class="date"></span>.
+                                </small>
+                            </div>
+                        </div> <!-- end col -->
+                        <div class="col-sm-6">
+                            <div class="mt-4 text-center">
+                                <p><span class="fw-medium m-0 font-dark">____________________________________________</span> </p>
+                                <p><h6 class="fs-15 mt-0 mb-1"><span class="name"></span></h6></p>
+                               
+                            </div>
+                            <div class="clearfix"></div>
+                        </div> <!-- end col -->
+                        <div class="col-sm-6">
+                          <div class="mt-4 text-center">
+                              <p><span class="fw-medium m-0 font-dark">____________________________________________</span> </p>
+                              <p><h6 class="fs-15 mt-0 mb-1"><%-user.name.toUpperCase()%> - C.P.D</h6></p>
+                             
+                          </div>
+                          <div class="clearfix"></div>
+                      </div> <!-- end col -->
+                    </div>
+
                       <!-- end row -->
-                      <div class="mb-1 row">
+                      <div class="mb-1 row not-print">
                         <div class="col-lg-8">
                           <h5 class="mt-2 bold">RECEBEDOR</h5>
 
@@ -388,9 +358,8 @@
                         <div class="col-lg-4">
                           <h5 class="mt-2 bold">Whatsapp</h5>
 
-                       
-                          
-                              
+                      
+                            
                               <div class="input-group">
                                 <div class="input-group-text">?</div>
                                 <input type="text" class="form-control contato" name="contato" id="contato" pattern="\d+((\(|)|-)\d+)?" inputmode="numeric" placeholder="" parsley-trigger="change" required  >
@@ -408,12 +377,12 @@
                       <div class="mt-3 mb-1">
                         <div class="text-end d-print-none">
                           <a href="javascript:window.print()" class="float-start btn btn-primary">
-                            <i class="uil uil-print me-1"></i> Imprimir Tarefa</a>
+                            <i class="uil uil-print me-1"></i> Imprimir Termo de Entrega</a>
                            
 
                             <%if(assigned == true && data.status == "complete"){%>
                               <%if(data.type != "out"){%>
-                                <button onclick="requestPermission()" class="btn btn-danger">Solicitar Assinatura pelo Whatsapp</button>
+                                <button onclick="requestPermission()" class="btn btn-danger">Concluir e Arquivar esta Tarefa</button>
                                  
                               <% }   %>
                               <% }   %>
@@ -425,24 +394,9 @@
 
                     </div>
 
-         
+        
 
-
-                <div class="tab-pane fade " id="pills-activity" role="tabpanel" aria-labelledby="pills-activity-tab">
-                  <h4 class="header-title mb-4">ATIVIDADES</h4>
-                  <div class="left-timeline mt-3 mb-3 ps-3">
-                    <ul class="list-unstyled events mb-0 history">
-
-
-
-                    </ul>
-                  </div>
-
-                </div>
-
-
-              </div>
-            </div> <!-- end col -->
+          
 
 
           </div>
@@ -570,95 +524,64 @@
 
     <script>
 
-
-async function  requestPermission(){
-
-       await sendButtonMessage({
-            type: "button2",
-            message: `Essa é sua chave pix é  ?
-            \nConfira com atenção pois *você recebera seus pagamentos nesta CHAVE PIX*.`,
-            from: '553788555554@s.whatsapp.net',
-            footer: "",
-            buttons: JSON.stringify(["CORRETO", "ESCREVER DE NOVO"]),
-          })
-
-}
+$('.created_time').text(moment($('.created_time').text()).format('DD/MM/YYYY HH:ss'))
+$('.date').text(moment().format('LL'))
 
 
 
+var table_ = $('#patrimonio_vinculado').DataTable({
+        ajax: "/api/tasks/patrimonio/<%- data.task_id %>",
+        responsive: true,
+        ordering: false,
+        searching: false,
+        language: {
+        emptyTable: "Nenhum patrimônio vinculado."
+    },
+        paging: false,
+        bInfo: false,
+        columns: [{
+           "className": "text-center" ,
+            "data": "registration",
+            render: function(data, type, row) {
+              return `<h6 class="fs-16 mt-0 mb-1">${row.registration}</h6>`;
+            }
+          },
+          {
+            "data": "name",
+            render: function(data, type, row) {
+              return `
+                     
+                                        
+                                       
+                            <h6 class="fs-15 mt-0 mb-1">${row.name}</h6>
+                            <p class="text-muted fs-12 mb-0"><i class="uil uil-map-pin-alt text-dark"></i>${row.centro_custo}</p>
 
-          function newService(id){
+                            ${list_service(row.services)}
 
-          //  $('#pills-service-tab').tab('show');
-          $(`[name="ref_patrimonio"] option[value="${id}"]`).prop('selected', true)
-          
+                           
+                       
+                            `;
 
-          $(`body .patrimonio_ref`).text($('[name="ref_patrimonio"] option:selected').text())
-       
-          $('html, body').animate({
-                    scrollTop: $('[name="ref_patrimonio"]').offset().top
-                }, 0);
-
-            $('[data-plugin="select_service"]').select2('open');
-
-          
-
-          }
+            }
+          },
+        ]
 
 
-function waranty(start){
-  
+      });
     
 
-                    if( moment().diff(start, 'days') >= 365){
-                         return `<label class="badge badge-soft-danger">Sem Garantia</label>`
-                    }else{
-                         return `<label class="badge badge-soft-success">Equipamento em Garantia</label>`
-                    }
-
-}
-
-function list_service(services){
-
-  if(services){
-
-    var tpl ='<h6 class="fs-13 mt-0 mb-1 mt-2">SERVIÇO EXECUTADO.</h6>'
-
-    services.forEach(function(item, index) {
-  
-     tpl += `<p class="text-muted fs-13 m-0 ">${moment(item.service_created).format('DD/MM/YYYY HH:mm')} - ${item.service}</p> `
-     if(item.description){
-      tpl +=`<p class="text-muted fs-12 m-0 "><strong>OBSERVAÇÃO: </strong>${item.description}</p>`
-     }
-
-    })
-
-    return tpl
-
-
-  }else{
-    return ""
-  }
-
- 
-
-
-
-
-
-}
-
-function remove_service(services){
+      function list_service(services){
 
 if(services){
 
-  var tpl ='<h6 class="m-2 fs-13 mt-0 mb-1 mt-2">REMOVER SERVIÇO EXECUTADO.</h6>'
+  var tpl ='<h6 class="fs-13 mt-0 mb-1 mt-2">SERVIÇO EXECUTADO.</h6>'
 
   services.forEach(function(item, index) {
-  
-   tpl += `
-   <a href="javascript:void(0);" onclick="deleteService('${item.id}', '<%- data.task_id %>')" class="dropdown-item text-danger">
-                                                    <i class="uil uil-trash me-2"></i>${moment(item.created).format('DD/MM/YYYY')} - ${item.service} </a>`
+
+   tpl += `<p class="text-muted fs-13 m-0 ">${moment(item.service_created).format('DD/MM/YYYY HH:mm')} - ${item.service}</p> `
+   if(item.description){
+    tpl +=`<p class="text-muted fs-12 m-0 "><strong>OBSERVAÇÃO: </strong>${item.description}</p>`
+   }
 
   })
 
@@ -677,106 +600,7 @@ if(services){
 
 }
 
-function serviceButtom(registration){
-if(`<%-data.status%>` != 'complete' && `<%-data.status%>` != 'new')  return `<button onclick="newService('${registration}')" class="btn btn-sm btn-primary float-end" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasTop">+ Serviço</button>`
-return ``
-}
-
-    
-
-
-      var table_ = $('#patrimonio_vinculado').DataTable({
-        ajax: "/api/tasks/patrimonio/<%- data.task_id %>",
-        responsive: true,
-        ordering: false,
-        searching: false,
-        language: {
-        emptyTable: "Nenhum patrimônio vinculado."
-    },
-        paging: false,
-        bInfo: false,
-        columns: [{
-           "className": "text-center" ,
-            "data": "registration",
-            render: function(data, type, row) {
-              return `<h6 class="fs-16 mt-0 mb-1">${row.registration}</h6><label class="badge badge-soft-primary">${row.situacao}</label>`;
-            }
-          },
-          {
-            "data": "name",
-            render: function(data, type, row) {
-              return `
-                            <div class="dropdown align-self-center float-end">
-                              
-                                            <a href="#" class="ml-2 dropdown-toggle arrow-none text-muted" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="uil uil-ellipsis-v"></i>
-                                            </a>
-                                            
-                                            <div class="dropdown-menu dropdown-menu-end" style="">
-                                              
-                                                <a href="javascript:void(0);" onclick="deletePatrimonio('${row.id}', '<%- data.task_id %>')" class="dropdown-item text-danger">
-                                                    <i class="uil uil-trash me-2"></i>APAGAR PATRIMÔNIO - ${row.name}
-                                                   
-
-                                                </a>
-                                                ${remove_service(row.services)}
-                                    
-                                            </div>
-                                        </div>
-                                          ${serviceButtom(row.registration)}
-                                       
-                            <h6 class="fs-15 mt-0 mb-1">${row.name} ${waranty(row.data_aquisicao)}</h6>
-                            <p class="text-muted fs-12 mb-0"><i class="uil uil-map-pin-alt text-dark"></i>${row.centro_custo}</p>
-
-                            ${list_service(row.services)}
-
-                           
-                       
-                            `;
-
-            }
-          },
-        ],
-
-    fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
-
-      
-    $('[name=ref_patrimonio]').append($('<option>', { 
-        value: aData.registration,
-        text : `${aData.registration} - ${aData.name}` 
-    }));
-
-
-
-        }
-      });
-
-      table_.on( 'preDraw', function () {
-              $("[name=ref_patrimonio] option").remove();
-
-      $('[name=ref_patrimonio]').append($('<option>', { 
-        value: '',
-        text : "Não" 
-      }));
-
-
-    
-} );
-
-
-      /**/
-
-
-
-
-
-
-      HistoryLoad('<%- data.task_id %>')
-      NotesLoad('<%- data.task_id %>')
-      $('.created_time').text(moment($('.created_time').text()).format('DD/MM/YYYY HH:ss'))
-      
-
-      $(document).on('select2:open', () => {
+$(document).on('select2:open', () => {
             document.querySelector('.select2-search__field').focus();
         });
 
@@ -820,7 +644,8 @@ return ``
   .on('select2:select', function (e) {
       var data = e.params.data;
      
-      $("#destiny").text(data.location)
+      $('.name').text(data.name)
+     
        var contato = $("#contato").val(data.phone).mask("(99) 99999-999?9")
        checkWhatsapp(data.phone)
   });
@@ -873,6 +698,180 @@ return $tpl;
 }
 
 
+async function  requestPermission(){
+/*
+await sendMessage({
+     type: "text",
+     message: `Você confirma a retirada de `,
+     from: '553788555554@s.whatsapp.net',
+   })*/
+
+   bootbox.confirm({
+    message: "<%-user.name%>, tem certeza que quer concluir esta tarefa ?",
+    buttons: {
+        confirm: {
+            label: 'Sim',
+            className: 'btn-success'
+        },
+        cancel: {
+            label: 'Não, não tenho certeza.',
+            className: 'btn-danger'
+        }
+    },
+    callback: function (result) {
+        if(result){
+
+          //registrar quem esta assinando e finalizar como assinatura em papel
+
+          var data = {
+          task_id: '<%- data.task_id %>',
+          id_servidor : $('[data-plugin="select_servidores"]').select2('data')[0].id,
+          sign_registration: $('[data-plugin="select_servidores"]').select2('data')[0].registration, 
+          sign_name: $('[data-plugin="select_servidores"]').select2('data')[0].name, 
+          sign_phone: $('[name="ref_patrimonio"]').val(),
+          sign_whatsapp: $("textarea#service").val(),
+          sign_type: 'papper',
+          tecnico_name: '<%-user.name%>'
+
+        }
+
+        $.ajax({
+          type: "POST",
+          url: `/tasks/sign`,
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(data),
+          success: function(response) {
+
+            if(response.status == 'signed'){
+
+              //window.location.href = '/tasks/archive/<%-data.task_id-%>'
+
+            
+
+              //patrimonio_vinculado_wrapper
+
+              //alert("Nota inserida.")
+              //$("textarea#description").val('')
+             // NotesLoad('<%- data.task_id %>')
+            }
+
+            
+
+          },
+          error: function(errMsg) {
+            alert(errMsg);
+          }
+
+        })
+
+
+
+
+          
+        }
+    }
+});
+
+}
+
+
+
+
+
+
+/*
+
+
+
+
+
+          function newService(id){
+
+          //  $('#pills-service-tab').tab('show');
+          $(`[name="ref_patrimonio"] option[value="${id}"]`).prop('selected', true)
+          
+
+          $(`body .patrimonio_ref`).text($('[name="ref_patrimonio"] option:selected').text())
+       
+          $('html, body').animate({
+                    scrollTop: $('[name="ref_patrimonio"]').offset().top
+                }, 0);
+
+            $('[data-plugin="select_service"]').select2('open');
+
+          
+
+          }
+
+
+function waranty(start){
+  
+    
+
+                    if( moment().diff(start, 'days') >= 365){
+                         return `<label class="badge badge-soft-danger">Sem Garantia</label>`
+                    }else{
+                         return `<label class="badge badge-soft-success">Equipamento em Garantia</label>`
+                    }
+
+}
+
+
+
+function remove_service(services){
+
+if(services){
+
+  var tpl ='<h6 class="m-2 fs-13 mt-0 mb-1 mt-2">REMOVER SERVIÇO EXECUTADO.</h6>'
+
+  services.forEach(function(item, index) {
+  
+   tpl += `
+   <a href="javascript:void(0);" onclick="deleteService('${item.id}', '<%- data.task_id %>')" class="dropdown-item text-danger">
+                                                    <i class="uil uil-trash me-2"></i>${moment(item.created).format('DD/MM/YYYY')} - ${item.service} </a>`
+
+  })
+
+  return tpl
+
+
+}else{
+  return ""
+}
+
+
+
+
+
+
+
+}
+
+function serviceButtom(registration){
+if(`<%-data.status%>` != 'complete' && `<%-data.status%>` != 'new')  return `<button onclick="newService('${registration}')" class="btn btn-sm btn-primary float-end" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasTop">+ Serviço</button>`
+return ``
+}
+
+    
+
+
+     
+
+
+
+
+
+
+
+
+
+      HistoryLoad('<%- data.task_id %>')
+      NotesLoad('<%- data.task_id %>')
+      $('.created_time').text(moment($('.created_time').text()).format('DD/MM/YYYY HH:ss'))
+      
+
+  
 
 
 
@@ -940,12 +939,7 @@ function Tplnotes(data){
             
             })
 
-            /*
-
-
-
-            
-            */
+     
           });
 
 }
@@ -1175,7 +1169,7 @@ function Tplnotes(data){
 
 
         })
-        }
+        }*/
 
     </script>
 

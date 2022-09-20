@@ -44,7 +44,7 @@ async function lembrete() {
             tpl += `_- ${patrimonio.registration} - ${patrimonio.name}_\n`;
           });
 
-          date.setSeconds(date.getSeconds() + 0);
+          date.setSeconds(date.getSeconds() + 60);
 
           schedule.scheduleJob(`${task.task_id}`, date, async function () {
             console.log(`Executando o Job da task ${task.task_id}`);
@@ -79,12 +79,15 @@ async function lembrete() {
   }
 }
 
-lembrete()
 
+/*
+
+“At minute 0 past hour 8, 10, and 14 on Monday, Tuesday, Wednesday, Thursday, and Friday.”
+*/
 var cron = require("node-cron");
 
-cron.schedule("* * * * *", async () => {
-  console.log("running a task every 5 minutes");
+cron.schedule("0 8,10,14 * * 1,2,3,4,5", async () => {
+  console.log("Lembrando o pessoal a cada 2 horas");
   lembrete()
 });
 
@@ -97,8 +100,34 @@ async function history(id_task, type, description, id_tecnico) {
   // id_tecnico - tecnico que gerou o historio que estava logado
 }
 
-router.get("/", function (req, res) {
+
+
+
+global.io.on("connection", async function (socket) {
+  
+  console.log('👾 New socket connected! >>', socket.id)
+
+  const data = await db.getTaskCount();
+  io.sockets.emit('getCountTasks', data);  
+
+})
+
+
+
+router.get("/test", function (req, res) {
   res.send("Service home page");
+
+  io.sockets.emit('getCountTasks', [
+    {
+        "status": "archive",
+        "count": 99
+    },
+    {
+        "status": "complete",
+        "count": 99
+    }
+]);
+
 });
 
 router.get("/count", isLoggedIn, async function (req, res) {
@@ -182,6 +211,9 @@ router.post("/create", isLoggedIn, async function (req, res) {
         req.user.id,
         task_id
       );
+      let tasksCount = await db.getTaskCount();
+      io.sockets.emit('getCountTasks', tasksCount);  
+
       res.redirect("/tasks/view/" + task_id);
     }
   );
@@ -197,8 +229,6 @@ router.post("/edit", isLoggedIn, async function (req, res) {
 
   let user = req.user.id;
   let task_id = dados.task_id;
-
-  console.log(dados);
 
   var data = {
     task_id: task_id,
@@ -263,6 +293,7 @@ router.post("/edit", isLoggedIn, async function (req, res) {
       res.redirect("/tasks/view/" + task_id);
     }
   );
+
 });
 
 router.post("/note", async function (req, res) {
@@ -380,6 +411,8 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
 
   var solicitante = data[0].name.toString().split(" ");
 
+  if(task_patrimonio){
+
   let tpl = "";
   task_patrimonio.forEach(function (patrimonio, index) {
     tpl += `_- ${patrimonio.registration} - ${patrimonio.name}_\n`;
@@ -412,7 +445,8 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
     } catch (error) {
       console.log("erro ao enviar");
     }
-
+  }
+}
     var date = new Date();
     await db.updateTaskDate(data[0].task_id, `${moment(date).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}`)
 
@@ -430,8 +464,12 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
       req.user.id,
       task_id
     );
+
+    let tasksCount = await db.getTaskCount();
+    io.sockets.emit('getCountTasks', tasksCount);  
+
     res.redirect("/tasks/view/" + task_id);
-  }
+  
 });
 
 router.get("/archive/:task_id", isLoggedIn, async function (req, res) {
@@ -461,6 +499,10 @@ router.get("/archive/:task_id", isLoggedIn, async function (req, res) {
       req.user.id,
       task_id
     );
+    
+  let tasksCount = await db.getTaskCount();
+  io.sockets.emit('getCountTasks', tasksCount);  
+
     res.redirect("/tasks/view/" + task_id);
   }
 });

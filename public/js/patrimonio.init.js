@@ -38,7 +38,7 @@ function tplte(row) {
 
     return `<div class="col-xl-6 col-lg-6">
     <div class="card">
-        <a href="/tasks/view/${row.registration}" >
+        
         <div class="card-body">
             
            
@@ -86,7 +86,7 @@ function tplte(row) {
                 </div>
             </div>
         </div>
-        </a>
+        
     </div>
     <!-- end card -->
 </div>`

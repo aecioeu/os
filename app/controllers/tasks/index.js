@@ -87,8 +87,14 @@ async function lembrete() {
 var cron = require("node-cron");
 
 cron.schedule("0 8,10,14 * * 1,2,3,4,5", async () => {
-  console.log("Lembrando o pessoal a cada 2 horas");
-  lembrete()
+
+  if(window.location.hostname != 'localhost'){
+    lembrete()
+    console.log("Lembrando o pessoal a cada 2 horas");
+  }else{
+    console.log("CRON não funciona no localhost");
+  }
+
 });
 
 // Estrutura /TASKS
@@ -316,6 +322,19 @@ router.post("/note", async function (req, res) {
       res.send({ status: "added" });
     }
   );
+});
+
+
+router.get("/printer", function (req, res) {
+ 
+  const { getDefaultPrinter,getPrinters }  = require("pdf-to-printer");
+  getPrinters().then(console.log);
+console.log('-------------')
+  getDefaultPrinter().then(console.log);
+
+  res.json({'status' : true});
+
+
 });
 
 router.post("/services", async function (req, res) {
@@ -628,8 +647,5 @@ router.post("/create/patrimonio", async function (req, res) {
       return res.json({status: "Sorry! Not found."});*/
 });
 
-router.get("/about", function (req, res) {
-  res.send("About this order of service");
-});
 
 module.exports = router;

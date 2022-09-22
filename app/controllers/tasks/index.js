@@ -88,7 +88,7 @@ var cron = require("node-cron");
 
 cron.schedule("0 8,10,14 * * 1,2,3,4,5", async () => {
   console.log("Lembrando o pessoal a cada 2 horas");
-  lembrete()
+ // lembrete()
 });
 
 // Estrutura /TASKS

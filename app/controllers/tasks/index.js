@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const path = require("path");
+const fs = require("fs");
 
 var pool = require("../../config/pool-factory");
 var {
@@ -21,7 +23,6 @@ const { sendMsg } = require("../../config/senderHelper");
 //AGENDAMENTOS
 const schedule = require("node-schedule");
 
-
 async function lembrete() {
   var start = moment().format("YYYY-MM-DD 00:00:00"),
     end = moment().format("YYYY-MM-DD 23:59:59");
@@ -33,7 +34,6 @@ async function lembrete() {
     var date = new Date();
 
     for (const task of completeTasks) {
-    
       var solicitante = task.name.split(" ");
       const task_patrimonio = await db.getTaskPatrimoniobyIdTask(task.task_id);
 
@@ -49,7 +49,10 @@ async function lembrete() {
           schedule.scheduleJob(`${task.task_id}`, date, async function () {
             console.log(`Executando o Job da task ${task.task_id}`);
 
-           await db.updateTaskDate(task.task_id, `${moment(date).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}`)
+            await db.updateTaskDate(
+              task.task_id,
+              `${moment(date).add(1, "days").format("YYYY-MM-DD HH:mm:ss")}`
+            );
 
             await sendMsg(
               {
@@ -66,9 +69,6 @@ async function lembrete() {
               },
               client
             );
-
-
-            
           });
         }
       } catch (error) {
@@ -79,7 +79,6 @@ async function lembrete() {
   }
 }
 
-
 /*
 
 “At minute 0 past hour 8, 10, and 14 on Monday, Tuesday, Wednesday, Thursday, and Friday.”
@@ -87,14 +86,12 @@ async function lembrete() {
 var cron = require("node-cron");
 
 cron.schedule("0 8,10,14 * * 1,2,3,4,5", async () => {
-
-  if(window.location.hostname != 'localhost'){
-    lembrete()
+  if (window.location.hostname != "localhost") {
+    lembrete();
     console.log("Lembrando o pessoal a cada 2 horas");
-  }else{
+  } else {
     console.log("CRON não funciona no localhost");
   }
-
 });
 
 // Estrutura /TASKS
@@ -106,34 +103,26 @@ async function history(id_task, type, description, id_tecnico) {
   // id_tecnico - tecnico que gerou o historio que estava logado
 }
 
-
-
-
 global.io.on("connection", async function (socket) {
-  
-  console.log('👾 New socket connected! >>', socket.id)
+  console.log("👾 New socket connected! >>", socket.id);
 
   const data = await db.getTaskCount();
-  io.sockets.emit('getCountTasks', data);  
-
-})
-
-
+  io.sockets.emit("getCountTasks", data);
+});
 
 router.get("/test", function (req, res) {
   res.send("Service home page");
 
-  io.sockets.emit('getCountTasks', [
+  io.sockets.emit("getCountTasks", [
     {
-        "status": "archive",
-        "count": 99
+      status: "archive",
+      count: 99,
     },
     {
-        "status": "complete",
-        "count": 99
-    }
-]);
-
+      status: "complete",
+      count: 99,
+    },
+  ]);
 });
 
 router.get("/count", isLoggedIn, async function (req, res) {
@@ -141,8 +130,6 @@ router.get("/count", isLoggedIn, async function (req, res) {
   const data = await db.getTaskCount();
   res.json(data);
 });
-
-
 
 router.get("/create", isLoggedIn, function (req, res) {
   //res.send('Service home page');
@@ -218,7 +205,7 @@ router.post("/create", isLoggedIn, async function (req, res) {
         task_id
       );
       let tasksCount = await db.getTaskCount();
-      io.sockets.emit('getCountTasks', tasksCount);  
+      io.sockets.emit("getCountTasks", tasksCount);
 
       res.redirect("/tasks/view/" + task_id);
     }
@@ -299,7 +286,6 @@ router.post("/edit", isLoggedIn, async function (req, res) {
       res.redirect("/tasks/view/" + task_id);
     }
   );
-
 });
 
 router.post("/note", async function (req, res) {
@@ -324,18 +310,43 @@ router.post("/note", async function (req, res) {
   );
 });
 
-
-router.get("/printer", function (req, res) {
- 
-  const { getDefaultPrinter,getPrinters }  = require("pdf-to-printer");
+router.get("/printer",  async function (req, res) {
+  console.time("Print Time");
+  const { getDefaultPrinter, getPrinters, print  } = require("pdf-to-printer");
   getPrinters().then(console.log);
-console.log('-------------')
+  console.log("-------------");
   getDefaultPrinter().then(console.log);
 
-  res.json({'status' : true});
+  var html_to_pdf = require("html-pdf-node");
+
+  let options = { format: "A4" };
+  // Example of options with args //
+  // let options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'] };
 
 
+var file_name = `./tmp/${Math.random().toString(36).substr(7)}.pdf`
+  var html_to_pdf = require("html-pdf-node");
+  html_to_pdf.generatePdf({url: "http://localhost/tasks/print/5RS6J"},
+     {
+        path:file_name,
+        //margin: { top: "150px", bottom: "150px", right: "0px", left: "0px" },
+        format: "a4",
+      }
+    )
+    .then((pdfBuffer) => {
+      //console.log("PDF Buffer:-", pdfBuffer);
+     //print(file_name).then(console.log);
+     console.timeEnd("Print Time");
+
+
+
+    });
+
+ 
+
+  res.json({ status: true });
 });
+
 
 router.post("/services", async function (req, res) {
   const dados = req.body;
@@ -361,31 +372,52 @@ router.post("/services", async function (req, res) {
   );
 });
 
-
 router.post("/sign", async function (req, res) {
   const dados = req.body;
   var data = {
     task_id: dados.task_id,
-          id_servidor : dados.id_servidor,
-          sign_registration: dados.sign_registration, 
-          sign_name: dados.sign_name, 
-          sign_phone: dados.sign_phone,
-          sign_whatsapp: dados.sign_whatsapp,
-          sign_type: 'papper',
-          tecnico_name: req.user.name,
+    id_servidor: dados.id_servidor,
+    sign_registration: dados.sign_registration,
+    sign_name: dados.sign_name,
+    sign_phone: dados.sign_phone,
+    sign_whatsapp: dados.sign_whatsapp,
+    sign_type: "papper",
+    tecnico_name: req.user.name,
   };
 
-  await pool.query(
-    "INSERT INTO task_sign SET ?",
-    data,
-    function (err, result) {
-      if (err) console.log(err);
-      //atualizar o servidor como o telefone
+  await pool.query("INSERT INTO task_sign SET ?", data, function (err, result) {
+    if (err) console.log(err);
+    //atualizar o servidor como o telefone
 
-      //res.redirect('/tasks/edit/' + task_id);
-      res.send({ status: "signed" });
-    }
-  );
+    //res.redirect('/tasks/edit/' + task_id);
+    res.send({ status: "signed" });
+  });
+});
+
+
+router.get("/print/:task_id", async function (req, res) {
+  //res.send('Service home page');
+  const task_id = req.params.task_id;
+  const data = await db.getTaskData(task_id);
+  const taskHistory = await db.getTaskHistory(task_id);
+  const taskTecnico = await db.getTasktecnicos(task_id);
+  const taskSign = await db.getTaskSign(task_id);
+  console.log(taskSign, taskTecnico);
+
+  var assingned = false;
+ /* if (taskTecnico) {
+    var tecnico_assingned = taskTecnico.map((el) => el.id_tecnico);
+    assingned = tecnico_assingned.includes(req.user.id.toString());
+  }*/
+
+  res.render("admin/tasks/print.ejs", {
+    user: req.user,
+    data: data[0],
+    task_history: taskHistory,
+    task_tecnico: taskTecnico,
+    taskSign: taskSign,
+    assigned: assingned,
+  });
 });
 
 router.get("/takeaway/:task_id", isLoggedIn, async function (req, res) {
@@ -395,7 +427,7 @@ router.get("/takeaway/:task_id", isLoggedIn, async function (req, res) {
   const taskHistory = await db.getTaskHistory(task_id);
   const taskTecnico = await db.getTasktecnicos(task_id);
   const taskSign = await db.getTaskSign(task_id);
-  console.log(taskSign)
+  console.log(taskSign);
 
   var assingned = false;
   if (taskTecnico) {
@@ -410,9 +442,10 @@ router.get("/takeaway/:task_id", isLoggedIn, async function (req, res) {
     task_tecnico: taskTecnico,
     taskSign: taskSign,
     assigned: assingned,
-    
   });
 });
+
+
 
 router.get("/invite/:task_id", isLoggedIn, async function (req, res) {
   //res.send('Service home page');
@@ -461,65 +494,66 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
 
   var solicitante = data[0].name.toString().split(" ");
 
-  if(task_patrimonio){
+  if (task_patrimonio) {
+    let tpl = "";
+    task_patrimonio.forEach(function (patrimonio, index) {
+      tpl += `_- ${patrimonio.registration} - ${patrimonio.name}_\n`;
+    });
 
-  let tpl = "";
-  task_patrimonio.forEach(function (patrimonio, index) {
-    tpl += `_- ${patrimonio.registration} - ${patrimonio.name}_\n`;
-  });
+    if (data[0]) {
+      var tecnico = {
+        id_tecnico: req.user.id,
+        name: req.user.name,
+        task_id: data[0].task_id,
+      };
 
-  if (data[0]) {
-    var tecnico = {
-      id_tecnico: req.user.id,
-      name: req.user.name,
-      task_id: data[0].task_id,
-    };
-
-    try {
-      sendMsg(
-        {
-          type: "text",
-          message: `*${capitalizeFirstLetter(
-            solicitante[0].toLowerCase()
-          )}*, o CPD da Prefeitura tem um recado importante para você.
+      try {
+        sendMsg(
+          {
+            type: "text",
+            message: `*${capitalizeFirstLetter(
+              solicitante[0].toLowerCase()
+            )}*, o CPD da Prefeitura tem um recado importante para você.
         \nOs itens:
         \n${tpl}
         \nJá estão prontos 🥳, aguardando sua retirada.
         \n*Providencie a retirada o mais breve possivel.*
         \n\n_👉Mensagem automática, não é necessario responder._
         `,
-          from: data[0].whatsapp,
-        },
-        client
-      );
-    } catch (error) {
-      console.log("erro ao enviar");
+            from: data[0].whatsapp,
+          },
+          client
+        );
+      } catch (error) {
+        console.log("erro ao enviar");
+      }
     }
   }
-}
-    var date = new Date();
-    await db.updateTaskDate(data[0].task_id, `${moment(date).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}`)
+  var date = new Date();
+  await db.updateTaskDate(
+    data[0].task_id,
+    `${moment(date).add(1, "days").format("YYYY-MM-DD HH:mm:ss")}`
+  );
 
-    await pool.query("UPDATE tasks SET status = ? WHERE task_id = ?", [
-      "complete",
-      data[0].task_id,
-    ]);
+  await pool.query("UPDATE tasks SET status = ? WHERE task_id = ?", [
+    "complete",
+    data[0].task_id,
+  ]);
 
-    db.insertHistory(
-      "task",
-      `${req.user.name} concluiu a tarefa ${moment().format(
-        "DD/MM/YYYY"
-      )} às ${moment().format("HH:mm")}.`,
-      ``,
-      req.user.id,
-      task_id
-    );
+  db.insertHistory(
+    "task",
+    `${req.user.name} concluiu a tarefa ${moment().format(
+      "DD/MM/YYYY"
+    )} às ${moment().format("HH:mm")}.`,
+    ``,
+    req.user.id,
+    task_id
+  );
 
-    let tasksCount = await db.getTaskCount();
-    io.sockets.emit('getCountTasks', tasksCount);  
+  let tasksCount = await db.getTaskCount();
+  io.sockets.emit("getCountTasks", tasksCount);
 
-    res.redirect("/tasks/view/" + task_id);
-  
+  res.redirect("/tasks/view/" + task_id);
 });
 
 router.get("/archive/:task_id", isLoggedIn, async function (req, res) {
@@ -549,17 +583,15 @@ router.get("/archive/:task_id", isLoggedIn, async function (req, res) {
       req.user.id,
       task_id
     );
-    
-  let tasksCount = await db.getTaskCount();
-  io.sockets.emit('getCountTasks', tasksCount);  
 
-    if(data[0].type == 'in'){
+    let tasksCount = await db.getTaskCount();
+    io.sockets.emit("getCountTasks", tasksCount);
+
+    if (data[0].type == "in") {
       res.redirect("/tasks/takeaway/" + task_id);
-    }else{
+    } else {
       res.redirect("/tasks/view/" + task_id);
     }
-    
-    
   }
 });
 
@@ -646,6 +678,5 @@ router.post("/create/patrimonio", async function (req, res) {
       if (rows.length > 0) return   res.json(rows);
       return res.json({status: "Sorry! Not found."});*/
 });
-
 
 module.exports = router;

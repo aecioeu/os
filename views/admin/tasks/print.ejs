@@ -84,8 +84,7 @@ tbody, td, tfoot, th, thead, tr {
   <!-- Begin page -->
   <div id="wrapper">
 
-    <%- include("../partials/nav") %>
-    <%- include("../partials/menu") %>
+
 
       
     <!-- ============================================================== -->
@@ -103,13 +102,7 @@ tbody, td, tfoot, th, thead, tr {
               <div class="page-title-box">
                 <h4 class="page-title">Entrega de Patrimonio
                 </h4>
-                <div class="page-title-right">
-                  <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tarefas</a></li>
-
-                  </ol>
-                </div>
+             
               </div>
             </div>
           </div>
@@ -121,10 +114,7 @@ tbody, td, tfoot, th, thead, tr {
 
                 <div class="card-body">
 
-                  <%if(assigned == false){%>
-                  <a href="/tasks/invite/<%-data.task_id-%>" class="alert btn btn-soft-danger d-block mb-2 bold">ASSUMIR ESTÁ TAREFA</a>
-        
-                  <%}%>
+         
 
           
                   <div class="row header">
@@ -317,7 +307,6 @@ tbody, td, tfoot, th, thead, tr {
                       </div>
                       <!-- end row -->
                       <%if(taskSign != false){%>
-ASSINADA
 
                       <div class="row">
                         <div class="col-sm-12">
@@ -412,16 +401,9 @@ ASSINADA
 
                       <div class="mt-3 mb-1">
                         <div class="text-end d-print-none">
-                          <a href="javascript:window.print()" class="float-start btn btn-primary">
+                          <a href="javascript:window.print()" class=" btn btn-primary">
                             <i class="uil uil-print me-1"></i> Imprimir Termo de Entrega</a>
-                           
-                            <a href="/tasks/edit/<%-data.task_id-%>" class="btn btn-soft-dark">Editar Tarefa</a>
-                            <%if(data.status == "complete" && taskSign == false){%>
-                              <%if(data.type != "out"){%>
-                                <button onclick="requestPermission()" class="btn btn-danger">Concluir e Arquivar esta Tarefa</button>
-                                 
-                              <% }   %>
-                              <% }   %>
+                                               
                                   
     
                         </div>
@@ -442,109 +424,7 @@ ASSINADA
 
      
 
-      <div class="col-xl-4 tasks_notes">
-        <div class="card">
-
-          <div class="card-body">
-
-            <h4 class="header-title mb-1">OBSERVAÇÕES</h4>
-
-            <%if(data.status != "archive"){%>
-
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="clearfix pt-2">
-                   
-
-                    <form action="#" id="notes" method="POST" class="comment-area-box">
-                      
-                      <div class="d-flex">
-                      <div class="me-3 flex-shrink-0">
-                            <a href="#"> 
-                                <img class="d-flex-object rounded-circle avatar-sm" alt="" src="/img/profile/<%-user.profile%>"> 
-                            </a>
-                        </div>
-
-                        <div class="flex-grow-1">
-                     
-                          <textarea rows="2" id="description" class="form-control border-0 resize-none" placeholder="Digite aqui .."></textarea>
-                          <div class="p-2 bg-light blight-border">
-                            <div class="float-end">
-                              <button type="submit" id="sendnotes" class="btn btn-sm btn-success">
-                                Enviar como <%-user.name%> <i class="uil uil-message ml-1"></i>
-                              </button>
-                            </div>
-                            <div>
-                             <a href="#" class="btn btn-sm px-1 btn-light">
-                                <i class="uil uil-cloud-upload"></i>
-                              </a>
-                              <!--<a href="#" class="btn btn-sm px-1 btn-light">
-                                <i class="uil uil-at"></i>
-                              </a>-->
-                            </div>
-                          </div>
-                     
-                        </div>
-                      </div>
-
-
-                     
-                    </form>
-
-                    <!-- <small class="text-muted">
-                                All accounts are to be paid within 7 days from receipt of
-                                invoice. To be paid by cheque or credit card or direct payment
-                                online. If account is not paid within 7 days the credits details
-                                supplied as confirmation of work undertaken will be charged the
-                                agreed quoted fee noted above.
-                              </small>-->
-                  </div>
-                </div> <!-- end col -->
-
-              </div>
-              <!-- end row -->
-              <%}%>
-            <%if(assigned == "unknow"){%>
-               
-              
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <%-user.name%>, você não pode adicionar nenhuma nota a está tarefa.
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-
-          <%}%>
-
-          <%if(data.status == "archive"){%>
-               
-              
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <%-user.name%>, não é possivel adicionar notas pois está tarefa já foi arquivada.
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-
-      <%}%>
-
-
    
-     
-               
-
-                  <div class="chat-conversation">
-                    <ul class="conversation-list notes">
-                  
-
-                    </ul>
-
-      
-
-        </div>
-
-
-            </div>
-
-          </div>
-
-        </div> <!-- content -->
 
     </div>
 
@@ -768,7 +648,7 @@ if($('[data-plugin="select_servidores"]').select2('data')[0] == undefined){
 }else{
 
   bootbox.confirm({
-    message: "<b><%-user.name%>, tem certeza que quer concluir esta tarefa ?",
+    message: "<b>tem certeza que quer concluir esta tarefa ?",
     buttons: {
         confirm: {
             label: 'Sim',
@@ -832,397 +712,6 @@ if($('[data-plugin="select_servidores"]').select2('data')[0] == undefined){
 
 
 
-
-/*
-
-
-
-
-
-          function newService(id){
-
-          //  $('#pills-service-tab').tab('show');
-          $(`[name="ref_patrimonio"] option[value="${id}"]`).prop('selected', true)
-          
-
-          $(`body .patrimonio_ref`).text($('[name="ref_patrimonio"] option:selected').text())
-       
-          $('html, body').animate({
-                    scrollTop: $('[name="ref_patrimonio"]').offset().top
-                }, 0);
-
-            $('[data-plugin="select_service"]').select2('open');
-
-          
-
-          }
-
-
-function waranty(start){
-  
-    
-
-                    if( moment().diff(start, 'days') >= 365){
-                         return `<label class="badge badge-soft-danger">Sem Garantia</label>`
-                    }else{
-                         return `<label class="badge badge-soft-success">Equipamento em Garantia</label>`
-                    }
-
-}
-
-
-
-function remove_service(services){
-
-if(services){
-
-  var tpl ='<h6 class="m-2 fs-13 mt-0 mb-1 mt-2">REMOVER SERVIÇO EXECUTADO.</h6>'
-
-  services.forEach(function(item, index) {
-  
-   tpl += `
-   <a href="javascript:void(0);" onclick="deleteService('${item.id}', '<%- data.task_id %>')" class="dropdown-item text-danger">
-                                                    <i class="uil uil-trash me-2"></i>${moment(item.created).format('DD/MM/YYYY')} - ${item.service} </a>`
-
-  })
-
-  return tpl
-
-
-}else{
-  return ""
-}
-
-
-
-
-
-
-
-}
-
-function serviceButtom(registration){
-if(`<%-data.status%>` != 'complete' && `<%-data.status%>` != 'new')  return `<button onclick="newService('${registration}')" class="btn btn-sm btn-primary float-end" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasTop">+ Serviço</button>`
-return ``
-}
-
-    
-
-
-     
-
-
-
-
-
-
-
-
-
-      HistoryLoad('<%- data.task_id %>')
-      NotesLoad('<%- data.task_id %>')
-      $('.created_time').text(moment($('.created_time').text()).format('DD/MM/YYYY HH:ss'))
-      
-
-  
-
-
-
-      function TplHistory(data){
-        $(".history li").remove()
-          data.forEach(function(item, index) {
-            
-            $(".history").append(
-              `   <li class="event-list">
-                          <div class="pb-4">
-                            <div class="d-flex">
-                              <div class="event-date text-center me-4 flex-shrink-0">
-                                <div class="bg-soft-primary p-1 rounded text-primary fs-14 created" time="${item.created}"></div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="fs-15 mt-0 mb-1">
-                                  ${item.title}
-                                </h6>
-                                <p class="text-muted fs-14">
-                                  ${item.description}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </li>`
-            );
-          });
-
-}
-
-function Tplnotes(data){
-  
-        $(".notes li").remove()
-          data.forEach(function(item, index) {
-
-           // console.log(moment(item.date).fromNow())
-
-
-            $('.notes').append(`<li class="position-relative">
-                                                    <hr>
-                                                    <h4><span class="badge bg-light text-dark position-absolute top-0 start-50 translate-middle">${item.date}</span></h4>
-                                                </li>`)
-
-
-
-            item.notes.forEach(function(notes, index2) {
-
-              $(".notes").append(
-              ` <li class="clearfix">
-                                            <div class="chat-avatar">
-                                                <img src="/img/profile/${notes.profile}" alt="user">
-                                                <i>${moment(notes.note_created).format('hh:mm')}</i>
-                                                
-                                            </div>
-                                            <div class="conversation-text">
-                                                <div class="ctext-wrap">
-                                                    <i class="fs-15">${notes.tecnico_name}</i>
-                                                    <p class="fs-14">${notes.description}</p>
-                                                </div>
-                                                
-                                                
-                                            </div>
-                </li>`
-            );
-            
-            })
-
-     
-          });
-
-}
-
-      function HistoryLoad(task_id) {
-        $.ajax({
-          type: "GET",
-          url: `/api/tasks/history/${task_id}`,
-          // dataType: "json", 
-          //contentType: "application/json; charset=utf-8",
-          success: function(response) {
-            TplHistory(response)
-            timeFromNow()
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-      }
-
-      function NotesLoad(task_id) {
-        $.ajax({
-          type: "GET",
-          url: `/api/tasks/notes/${task_id}`,
-          // dataType: "json", 
-          //contentType: "application/json; charset=utf-8",
-          success: function(response) {
-
-           if(response) Tplnotes(response)
-            //TplHistory(response)
-          //  timeFromNow()
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-      }
-
-
-      $("#services").submit(function(e) {
-        e.preventDefault();
-
-           
-        var data = {
-          task_id: '<%- data.task_id %>',
-          id_service: $('[data-plugin="select_service"]').select2('data')[0].name, 
-          id_patrimonio: $('[name="ref_patrimonio"]').val(),
-          description: $("textarea#service").val()
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/tasks/services`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-
-            if(response.status == 'added'){
-
-              
-
-              $('#patrimonio_vinculado').DataTable().ajax.reload();
-              //$('#pills-tasks-tab').tab('show');
-              //Reseta o select
-              
-              
-              $('[data-plugin="select_service"]').val('').trigger('change')
-              $('#offcanvasRight').offcanvas('hide');
-
-              HistoryLoad('<%- data.task_id %>')
-             // $(`[name="ref_patrimonio"] option[value="${id}"]`).prop('selected', true)
-             setTimeout(() => {
-              $('html, body').animate({
-                    scrollTop: $('#patrimonio_vinculado').offset().top
-                }, 0);
-             }, 300);
-
-             
-           
-
-            
-
-              //patrimonio_vinculado_wrapper
-
-              //alert("Nota inserida.")
-              //$("textarea#description").val('')
-             // NotesLoad('<%- data.task_id %>')
-            }
-
-            
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-
-
-
-    })
-
-
-
-      $("#notes").submit(function(e) {
-        e.preventDefault();
-
-           
-        var data = {
-          task_id: '<%- data.task_id %>',
-          description: $("textarea#description").val()
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/tasks/note`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-
-            if(response.status == 'added'){
-              //alert("Nota inserida.")
-              $("textarea#description").val('')
-              NotesLoad('<%- data.task_id %>')
-            }
-
-            
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-
-
-
-    })
-
-      
-
-      function timeFromNow() {
-        $('[time]').each(function(i, obj) {
-
-          $(this).text(moment($(this).attr("time")).fromNow())
-
-        });
-      }
-
-      timeFromNow()
-      setInterval(() => {
-        timeFromNow()
-      }, 1000);
-
-      function deletePatrimonio(id_patrimonio, task_id) {
-
-        var data = {
-          id: id_patrimonio,
-          task_id: task_id
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/api/patrimonio/delete`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-            $('#patrimonio_vinculado').DataTable().ajax.reload();
-            HistoryLoad('<%- data.task_id %>')
-
-            //Se a solicitação for feita com sucesso, a resposta representará os dados
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-      }
-
-
-      function deleteService(id_service, task_id) {
-
-        //deleteService('${item.id}', '<%- data.task_id %>')
-
-        var data = {
-          id: id_service,
-          task_id: task_id
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/api/services/delete`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-            $('#patrimonio_vinculado').DataTable().ajax.reload();
-            HistoryLoad('<%- data.task_id %>')
-
-            //Se a solicitação for feita com sucesso, a resposta representará os dados
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-        }*/
 
     </script>
 

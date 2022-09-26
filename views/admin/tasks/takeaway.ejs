@@ -123,31 +123,10 @@ tbody, td, tfoot, th, thead, tr {
 
                   <%if(assigned == false){%>
                   <a href="/tasks/invite/<%-data.task_id-%>" class="alert btn btn-soft-danger d-block mb-2 bold">ASSUMIR ESTÁ TAREFA</a>
-        
                   <%}%>
 
           
-                  <div class="row header">
-                    <div class="col-sm-8 ">
-                      <h3 class="mt-1 logo-lg-text-dark"><img src="/img/logo-sm.svg" alt height="24"> CPD</h3>
-                      <small class="mt-1">
-                        Centro de Processamento de Dados
-                      </small>
-                     
-                   </div>
-
-                   <div class="col-sm-4 ">
-                     <small class="mt-1">
-                      Av. Joaquim Gomes Pererira, 823<br>
-                      Centro, Lagoa da Prata<br>
-                      Contato: (37) 3262 5903
-                    </small>
-                   
-                 </div>
-              
-
-               
-                  </div>
+                  <%-include('../partials/components/header-cpd.ejs') %> 
                   <hr class="mt-2 mb-2">
                       <div class="row">
                         <div class="col-sm-8 border-right">
@@ -166,9 +145,9 @@ tbody, td, tfoot, th, thead, tr {
                           <div class="task-box mb-1">
 
                             <h5 class="text-dark fs-17 mb-0">
-                              <%-data.registration%> - <%-data.name%> <span class="text-dark"><%- data.phone %></span>
+                              <%-data.registration%> - <%-data.name%> 
                             </h5>
-                          
+                            <small><span class="text-dark float-end"><%- data.phone %></span></small>
 
                           </div>
 

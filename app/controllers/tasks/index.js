@@ -96,18 +96,55 @@ cron.schedule("0 8,10,14 * * 1,2,3,4,5", async () => {
 
 // Estrutura /TASKS
 
-async function history(id_task, type, description, id_tecnico) {
-  // função que vai realizar a historia das tasks no banco de dados
-  // id_task = id que está vinculado
-  // type se é historio de tasks, sistema, usuarios
-  // id_tecnico - tecnico que gerou o historio que estava logado
-}
+
+let { addUser, getUsersInRoom, removeUser} =  require('../../config/ioFunctions')
 
 global.io.on("connection", async function (socket) {
-  console.log("👾 New socket connected! >>", socket.id);
+ // console.log("👾 New socket connected! >>", socket.id);
+
+
+  socket.on('join', ({ name }, callback) => {
+    console.log('alguem entrou' + name)
+ 
+    const { error, user } = addUser(
+        { id: socket.id, name });
+
+    if (error) return callback(error);
+
+    // Emit will send message to the user
+    // who had joined
+    socket.emit('alert', { user: 'admin', text:
+        `${user.name},
+        welcome to room ${user.room}.` });
+
+    // Broadcast will send message to everyone
+    // in the room except the joined user
+    socket.broadcast.emit('alert', { user: "admin",
+        text: `${user.name}, has joined` });
+
+    io.to(user.id).emit('alert', {
+        room: user
+    });
+    callback();
+})
+
+
+
+
+
+socket.on('disconnect', () => {
+  console.log('remover')
+  const user = removeUser(socket.id);
+  if (user) {
+      io.to(user.room).emit('message',
+      { user: 'admin', text:
+      `${user.name} had left` });
+  }
+})
+
 
   const data = await db.getTaskCount();
-  io.sockets.emit("getCountTasks", data);
+  socket.broadcast.emit("getCountTasks", data);
 });
 
 router.get("/test", function (req, res) {
@@ -173,7 +210,12 @@ router.post("/create", isLoggedIn, async function (req, res) {
 
       const data = await db.getTaskData(task_id);
       var solicitante = data[0].name.toString().split(" ");
+     
       if (dados.tipo == "in") {
+        // usar socket io para enviar a mensagem.
+
+        if(dados.notify == 'on'){
+
         try {
           await sendMsg(
             {
@@ -181,11 +223,11 @@ router.post("/create", isLoggedIn, async function (req, res) {
               message: `Oi 👋 *${capitalizeFirstLetter(
                 solicitante[0].toLowerCase()
               )}* tudo bem ? \nAqui é do CPD da Prefeitura.
-       \nFoi gerada uma nova tarefa do equipamento que *chegou para manutenção*.
-       \nFique atento pois as notificações desta tarefa vão chegar por aqui.
-       \n
-       \n_👉Mensagem automática, não é necessario responder._
-       `,
+              \nFoi gerada uma nova tarefa do equipamento que *chegou para manutenção*.
+              \nFique atento pois as notificações desta tarefa vão chegar por aqui.
+              \n
+              \n_👉Mensagem automática, não é necessario responder._
+              `,
               from: data[0].whatsapp,
             },
             client
@@ -193,6 +235,8 @@ router.post("/create", isLoggedIn, async function (req, res) {
         } catch (error) {
           console.log("erro ao enviar");
         }
+
+      }
       }
 
       db.insertHistory(
@@ -678,5 +722,16 @@ router.post("/create/patrimonio", async function (req, res) {
       if (rows.length > 0) return   res.json(rows);
       return res.json({status: "Sorry! Not found."});*/
 });
+
+
+
+router.get("/show/:status", isLoggedIn, async function (req, res, next) {
+  const status = req.params.status;
+  res.render("admin/tasks.ejs", {
+    user : req.user,
+    status: status
+  });
+});
+
 
 module.exports = router;

@@ -27,6 +27,10 @@ const {
       
   }
 
+  const startSock = async() => {
+
+
+
 
 
     const client = makeWAclientet({
@@ -43,8 +47,9 @@ const {
       const { connection } = update;
       if (connection === "close") {
         console.log("closed connection =/");
+        startSock()
        
-        process.exit();
+        //process.exit();
   
 
   
@@ -74,5 +79,11 @@ const {
     //client.ev.on("contacts.update", (m) => console.log(m));
   
     client.ev.on("creds.update", saveState);
+
+  
+
+  module.exports = client;
+
  
-module.exports = client;
+}
+startSock()

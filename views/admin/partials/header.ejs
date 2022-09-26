@@ -11,30 +11,45 @@
 
 
 <!-- App css -->
-<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="bs-default-stylesheet">
-<link href="/css/app.min.css" rel="stylesheet" type="text/css" id="app-default-stylesheet">
+<link href="/css/bootstrap.min.css?v=1.0.1" rel="stylesheet" type="text/css" id="bs-default-stylesheet">
+<link href="/css/app.min.css?v=1.0.1" rel="stylesheet" type="text/css" id="app-default-stylesheet">
 
 <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" id="bs-dark-stylesheet" disabled>
-<link href="/css/app.min.css" rel="stylesheet" type="text/css" id="app-dark-stylesheet" disabled>
-<link href="/css/select2.min.css" rel="stylesheet" type="text/css" id="app-dark-stylesheet" >
+<link href="/css/app.min.css?v=1.0.1" rel="stylesheet" type="text/css" id="app-dark-stylesheet" disabled>
+<link href="/css/select2.min.css?v=1.0.1" rel="stylesheet" type="text/css" id="app-dark-stylesheet" >
 
 <!-- icons -->
 <link href="/css/icons.min.css" rel="stylesheet" type="text/css">
-<script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
 
 const socket = io.connect(`${window.location.origin}`);
 
 
 socket.on('connect', function(){
+
+
+
+        return () => {
+            socket.emit('disconnect');
+            socket.off();
+        }
  
 });
 
+socket.emit('join',{name : '<%-user.name%>'}, (error) => {
+            if(error) {
+               // alert(error);
+            }
+        })
+
 socket.on('getCountTasks', function(data){
   taskCount(data)    
-  console.log(data)  
-    });
+});
 
+socket.on('alert', function(data){
+  console.log(data);
+});
 
   
 </script>

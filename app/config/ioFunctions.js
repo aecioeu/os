@@ -1,10 +1,5 @@
 const users = [];
 
-setInterval(() => {
-
-    console.log(users)
-    
-}, 5000);
  
 const addUser = ({id, name}) => {
    

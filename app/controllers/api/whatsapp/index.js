@@ -27,11 +27,15 @@ router.post('/check', async function (req, res) {
 
    return res.status(200).json({
     status: result,
-    message: "404 - Não existe",
+    message: "Numero tem Whatsapp",
   });
 
  }else{
   console.log('algum erro ocorreu ao buscar 55' + number)
+  return res.status(200).json({
+    status: result,
+    message: "Não existe",
+  });
  }
 
 })

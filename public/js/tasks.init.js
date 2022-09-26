@@ -55,19 +55,25 @@ var select = $('[data-plugin="select_servidores"]')
     checkWhatsapp(data.phone);
   });
 
-$(document).ready(function () {
-  if ($(".contato").lenght > 0) {
+
+  if ($(".contato").length) {
  
     $('.contato').inputmask("mask", {
         "mask": "(99) 99999-9999",
         showMaskOnFocus: true,
         showMaskOnHover: false,
         autoUnmask: true,
-        clearMaskOnLostFocus: true
+        clearMaskOnLostFocus: true,
+        greedy: false,
+        oncomplete : function () {
+
+          checkWhatsapp($(".contato").val());
+        }
     });
     
   }
-});
+
+
 
 function formatRepo(data) {
   //console.log(data)
@@ -115,6 +121,8 @@ function initTasks(date) {
 }
 
 
+if($("#range-datepicker").length){
+
 
 const flatpickr = $("#range-datepicker").flatpickr({
   locale: "pt",
@@ -134,6 +142,8 @@ const flatpickr = $("#range-datepicker").flatpickr({
 });
 
 
+
+
 $("#busca").on("input", function () {
     var dInput = this.value;
     console.log(dInput);
@@ -141,3 +151,4 @@ $("#busca").on("input", function () {
     initTasks(flatpickr.selectedDates);
     //$(".dDimension:contains('" + dInput + "')").css("display","block");
   });
+}

@@ -28,24 +28,33 @@ const socket = io.connect(`${window.location.origin}`);
 
 socket.on('connect', function(){
 
+  socket.emit('join',{name : '<%-user.name%>'}, (error) => {
+            if(error) {
+               // alert(error);
+            }
+        })
+
+
+socket.on('getCountTasks', function(data){
+  console.log(data);
+  taskCount(data)    
+});
+
+
 
 
         return () => {
             socket.emit('disconnect');
             socket.off();
         }
+
+
+        
  
 });
 
-socket.emit('join',{name : '<%-user.name%>'}, (error) => {
-            if(error) {
-               // alert(error);
-            }
-        })
 
-socket.on('getCountTasks', function(data){
-  taskCount(data)    
-});
+
 
 socket.on('alert', function(data){
   console.log(data);

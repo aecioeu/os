@@ -32,6 +32,24 @@ body {
   border: none !important;
 }
 
+
+.btn-success {
+  color: #fff;
+  background-color: #0093E9 !important;
+  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(14,174,87,1) 0%, rgba(12,116,117,1) 90% );
+  border: none;
+}
+.btn-success:hover {
+  color: #fff;
+  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgb(11, 133, 66) 0%, rgb(10, 89, 90) 90% );
+  border: none !important;
+}
+
+
+
+
+
+
 .card {
   border: none;
   margin-bottom: 24px;

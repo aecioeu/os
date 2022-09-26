@@ -81,19 +81,7 @@
                               </label>
                             </div>
 
-                            <!--<div class="col-md-12 mb-md-0 mb-2 mt-2">
-                              <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                Essa opção é importante pois o solicitante sera notificado via whatsapp da situação da
-                                tarefa.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                  aria-label="Close"></button>
-                              </div>
-
-
-                            </div>-->
-
-
-
+          
 
                           </div>
 
@@ -120,7 +108,7 @@
                         
                               <span class="help-block">
                                 <div class="form-switch mb-2">
-                                  <input type="checkbox" class="form-check-input" id="notify" name="notify" checked> 
+                                  <input type="checkbox" class="form-check-input" id="notify" name="notify"> 
                                   <label class="form-check-label" for="notify">Notificar por Whatsapp</label>
                               </div>
 
@@ -182,7 +170,24 @@
           <%- include('../partials/footer') %>
           <script src="/js/masked.js"></script>
 
-          <script type="module" src="/js/tasks.init.js"></script>
+          <script type="module" src="/js/tasks.init.js?v=0.99"></script>
+          <script>
+    
+ 
+
+            $("input[name$='tipo']").click(function() {
+          
+              if($(this).val() == 'in'){
+              $("#notify").prop('checked',true);
+              }else{
+                $("#notify").prop('checked',false);
+              }
+            
+            })
+           // 
+
+
+          </script>
        
 
      <!-- Plugin js-->

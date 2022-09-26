@@ -15,15 +15,15 @@ const {
   } = require("@adiwajshing/baileys");
 
   const { state, saveState } = useSingleFileAuthState(
-    "./app/config/sessions/auth_info_multi.json"
+    "./app/sessions/auth_info_multi.json"
   );
 
 
   
   var fs = require('fs');
 
-  if (!fs.existsSync('./app/config/sessions')){
-      fs.mkdirSync('./app/config/sessions', { recursive: true });
+  if (!fs.existsSync('./app/sessions')){
+      fs.mkdirSync('./app/sessions', { recursive: true });
       
   }
 

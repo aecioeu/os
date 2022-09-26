@@ -24,7 +24,7 @@ const { sendMsg } = require("../../config/senderHelper");
 const schedule = require("node-schedule");
 
 async function lembrete() {
-  var start = moment().format("YYYY-MM-DD 00:00:00"),
+  var start = '2022-09-01 00:00:00',
     end = moment().format("YYYY-MM-DD 23:59:59");
 
   //19/09 00:00 ate 19/09 23:59
@@ -34,6 +34,9 @@ async function lembrete() {
     var date = new Date();
 
     for (const task of completeTasks) {
+      if(task.whatsapp){
+      console.log(`Jobs para executar ${task.task_id}`);
+      }
       var solicitante = task.name.split(" ");
       const task_patrimonio = await db.getTaskPatrimoniobyIdTask(task.task_id);
 
@@ -46,6 +49,8 @@ async function lembrete() {
 
           date.setSeconds(date.getSeconds() + 60);
 
+          if(task.whatsapp){
+
           schedule.scheduleJob(`${task.task_id}`, date, async function () {
             console.log(`Executando o Job da task ${task.task_id}`);
 
@@ -53,11 +58,12 @@ async function lembrete() {
               task.task_id,
               `${moment(date).add(1, "days").format("YYYY-MM-DD HH:mm:ss")}`
             );
+            
 
             await sendMsg(
               {
                 type: "text",
-                message: `*${capitalizeFirstLetter(
+                message: `*Lembrete !*, *${capitalizeFirstLetter(
                   solicitante[0].toLowerCase()
                 )}*, você ainda não buscou os itens 😅 aqui no CPD.
                     \n${tpl}
@@ -69,7 +75,10 @@ async function lembrete() {
               },
               client
             );
+         
+
           });
+        }
         }
       } catch (error) {
         console.log("erro ao enviar", error);
@@ -85,13 +94,11 @@ async function lembrete() {
 */
 var cron = require("node-cron");
 
-cron.schedule("0 8,10,14 * * 1,2,3,4,5", async () => {
-  if (window.location.hostname != "localhost") {
+
+cron.schedule("0 8,10,12,14 * * 1,2,3,4,5", async () => {
+
+//cron.schedule("0 8,10,12,14 * * 1,2,3,4,5", async () => {
     lembrete();
-    console.log("Lembrando o pessoal a cada 2 horas");
-  } else {
-    console.log("CRON não funciona no localhost");
-  }
 });
 
 // Estrutura /TASKS
@@ -104,7 +111,7 @@ global.io.on("connection", async function (socket) {
 
 
   socket.on('join', ({ name }, callback) => {
-    console.log('alguem entrou' + name)
+   
  
     const { error, user } = addUser(
         { id: socket.id, name });
@@ -133,7 +140,7 @@ global.io.on("connection", async function (socket) {
 
 
 socket.on('disconnect', () => {
-  console.log('remover')
+ // console.log('remover')
   const user = removeUser(socket.id);
   if (user) {
       io.to(user.room).emit('message',
@@ -144,7 +151,9 @@ socket.on('disconnect', () => {
 
 
   const data = await db.getTaskCount();
-  socket.broadcast.emit("getCountTasks", data);
+  socket.emit("getCountTasks", data);
+
+
 });
 
 router.get("/test", function (req, res) {
@@ -211,32 +220,25 @@ router.post("/create", isLoggedIn, async function (req, res) {
       const data = await db.getTaskData(task_id);
       var solicitante = data[0].name.toString().split(" ");
      
-      if (dados.tipo == "in") {
-        // usar socket io para enviar a mensagem.
-
-        if(dados.notify == 'on'){
-
+      if (dados.notify == 'on') {
         try {
-          await sendMsg(
+           sendMsg(
             {
               type: "text",
               message: `Oi 👋 *${capitalizeFirstLetter(
                 solicitante[0].toLowerCase()
               )}* tudo bem ? \nAqui é do CPD da Prefeitura.
-              \nFoi gerada uma nova tarefa do equipamento que *chegou para manutenção*.
-              \nFique atento pois as notificações desta tarefa vão chegar por aqui.
-              \n
+              \nFoi gerada uma nova tarefa *#${task_id}* para ${(dados.tipo == 'in') ? `*Manutenção de Equimanetos*` :` *Auxilio ao Usuário*`}.
+              \nProblema relatado:
+              \n_${dados.problem}_
+              \n☝️ Fique atento pois as notificações desta tarefa vão chegar por aqui.
               \n_👉Mensagem automática, não é necessario responder._
               `,
               from: data[0].whatsapp,
             },
             client
           );
-        } catch (error) {
-          console.log("erro ao enviar");
-        }
-
-      }
+        } catch (error) {console.log("erro ao enviar")}
       }
 
       db.insertHistory(
@@ -248,6 +250,7 @@ router.post("/create", isLoggedIn, async function (req, res) {
         req.user.id,
         task_id
       );
+
       let tasksCount = await db.getTaskCount();
       io.sockets.emit("getCountTasks", tasksCount);
 
@@ -539,9 +542,9 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
   var solicitante = data[0].name.toString().split(" ");
 
   if (task_patrimonio) {
-    let tpl = "";
+    let tpl =''
     task_patrimonio.forEach(function (patrimonio, index) {
-      tpl += `_- ${patrimonio.registration} - ${patrimonio.name}_\n`;
+      tpl += `_${patrimonio.registration} - ${patrimonio.name}_\n`;
     });
 
     if (data[0]) {
@@ -551,26 +554,32 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
         task_id: data[0].task_id,
       };
 
+      if (data[0].notification == 'on') {
       try {
-        sendMsg(
-          {
-            type: "text",
-            message: `*${capitalizeFirstLetter(
-              solicitante[0].toLowerCase()
-            )}*, o CPD da Prefeitura tem um recado importante para você.
-        \nOs itens:
-        \n${tpl}
-        \nJá estão prontos 🥳, aguardando sua retirada.
-        \n*Providencie a retirada o mais breve possivel.*
-        \n\n_👉Mensagem automática, não é necessario responder._
-        `,
-            from: data[0].whatsapp,
-          },
-          client
-        );
+        if(data[0].type == 'in'){
+          sendMsg(
+            {
+              type: "text",
+              message: `*${capitalizeFirstLetter(
+                solicitante[0].toLowerCase()
+              )}*, o CPD da Prefeitura tem um *recado importante para você*.
+          \nOs patrimônios:
+          \n${tpl}
+          \nJá estão prontos 🥳, aguardando sua retirada.
+          \n*Providencie a retirada o mais breve possivel.*
+          \n\n_👉Mensagem automática, não é necessario responder._
+          `,
+              from: data[0].whatsapp,
+            },
+            client
+          );
+        }
+
+      
       } catch (error) {
         console.log("erro ao enviar");
       }
+    }
     }
   }
   var date = new Date();
@@ -607,11 +616,41 @@ router.get("/archive/:task_id", isLoggedIn, async function (req, res) {
   const data = await db.getTaskData(task_id);
 
   if (data[0]) {
+  
+    var solicitante = data[0].name.toString().split(" ");
     var tecnico = {
       id_tecnico: req.user.id,
       name: req.user.name,
       task_id: data[0].task_id,
     };
+
+    if (data[0].notification == 'on' && data[0].type == 'out') {
+      //console.log(data[0].whatsapp, capitalizeFirstLetter(solicitante.toLowerCase(),data[0].task_id)
+
+      try {
+ 
+          await sendMsg(
+            {
+              type: "text",
+              message: `*${capitalizeFirstLetter(
+                solicitante[0].toLowerCase()
+              )}*, o CPD da Prefeitura tem um recado importante para você.
+          \nA solicitação *#${data[0].task_id}* foi finalizada.
+          \nFoi um prazer atendê-lo 😄. Caso tenha alguma outra dúvida, não hesite em nos procurar novamente!
+          \nAté mais e bom trabalho!
+          \n\n_👉Mensagem automática, não é necessario responder._
+          `,
+              from: data[0].whatsapp,
+            },
+            client
+          );
+ 
+
+      
+      } catch (error) {
+        console.log("erro ao enviar");
+      }
+    }
 
     await pool.query("UPDATE tasks SET status = ? WHERE task_id = ?", [
       "archive",

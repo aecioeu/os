@@ -41,6 +41,8 @@ const getMyTask = async (data) => {
 INNER JOIN TB_Contrato ON TB_Contrato.id_contrato = TB_ContratoCotista.id_contrato
 INNER JOIN TB_Cotista ON TB_Cotista = TB_ContratoCotista.id_cotista */
 
+const tasks = [] 
+
 
   let rows = await pool.query(`SELECT  *,
   tasks.created as created_task From task_tecnico
@@ -55,17 +57,44 @@ INNER JOIN TB_Cotista ON TB_Cotista = TB_ContratoCotista.id_cotista */
  
   if (rows.length > 0) {
 
-    const tasks = [] 
-
     for (const row of rows) {
       var tecnico = await getTasktecnicos(row.task_id)
       row.tecnico = tecnico
       tasks.push(row)
     }
+   
+  }
 
-  return tasks
+  //pesquisar por item dentro da task
+  if(data.term.length > 4){
 
-  }else return false;
+  let itensOnTask = await pool.query(`SELECT  *
+  FROM task_patrimonio
+  WHERE task_patrimonio.registration LIKE ?
+  ORDER BY created DESC`, 
+  [`%${data.term}%`]);
+
+  if(itensOnTask.length > 0){
+    //getTaskData
+    for (const iten of itensOnTask) {
+      console.log(iten.task_id)
+
+      var task = await getTaskData(iten.task_id)
+      if(task.length > 0){
+      var tecnico = await getTasktecnicos(iten.task_id)
+      task[0].tecnico = tecnico
+      task[0].info = 'patrimonio'
+    
+      tasks.push(task[0])
+    }
+    }
+    
+  }
+}
+
+  if (tasks.length > 0) return tasks
+  return false
+   
  
  /* if (rows.length > 0) return   res.json(rows);
   return res.json({status: "Sorry! Not found."});*/

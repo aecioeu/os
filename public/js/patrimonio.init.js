@@ -4,6 +4,31 @@ $(document).ready(function() {
 
 
 
+function services (services) {
+    tpl = '';
+    if(services.length > 0){
+        tpl = '<h6 class="header-title mb-1 mt-2">Histórico de Serviços</h6>'
+    }
+
+services.forEach(function (service, index) {
+        tpl += `<div class="row mt-2">
+        <div class="col">
+            
+              
+                <label class="form-check-label" for="task2">
+                    ${service.service}
+                    <br><small> ${service.description}</small>
+                </label>
+                <p class="fs-13 text-muted">${moment(service.created).fromNow()} em ${moment(service.created).format("DD/MM/YYYY HH:mm:ss")}</p>
+         
+        </div>
+            </div>`
+    })
+    
+return tpl
+
+
+}
     
 
 function tecnicos(tecnicos) {
@@ -52,10 +77,10 @@ function tplte(row) {
             <p class="text-muted mb-1 mt-1  ">
            Situação: <b>${row.situacao}</b>
             </p>
-  
-             
-       
-             
+
+
+            ${services(row.services)}
+                 
          
         </div>
         <div class="card-body border-top">

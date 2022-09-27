@@ -36,6 +36,7 @@ app.disable('x-powered-by');
 app.use(express.static(__dirname + '/public', {
     maxAge: 86400000,
     setHeaders: function(res, path) {
+      res.setHeader('Cache-Control', 'no-cache')
        // res.setHeader("Expires", new Date(Date.now() + 2592000000 * 30).toUTCString());
       //  res.setHeader('Cache-Control', `public, max-age=${1 * 365 * 24 * 60 * 60 * 1000}`)
     }

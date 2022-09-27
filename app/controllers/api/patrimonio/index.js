@@ -13,9 +13,20 @@ router.get('/search', async function (req, res) {
 
     const term = req.query.term  ? req.query.term : ' '
 
-    let rows = await pool.query("SELECT * FROM patrimonio WHERE registration LIKE ? OR name LIKE ? LIMIT 10", [`%${term}%`, `%${term}%`]);
-      if (rows.length > 0) return   res.json(rows);
-      return res.json({status: "Sorry! Not found."});
+    let sv = []
+
+    let rows = await pool.query("SELECT * FROM patrimonio WHERE registration LIKE ? OR name LIKE ? LIMIT 10", [`%${term}%`, `%${term}%`]);  
+  
+    if (rows.length > 0) {
+      for (const row of rows) {
+
+        let services  = await pool.query("SELECT * FROM task_service WHERE registration = ?", [row.registration]);
+        row.services = services
+        sv.push(row)
+      }
+     
+      return   res.json(sv);
+    }else return res.json({status: "Sorry! Not found."});
 
 })
 

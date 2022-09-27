@@ -35,10 +35,12 @@ const {
 
     const client = makeWAclientet({
       //logger: P({ level: 'debug' }),
+      
       auth: state,
       printQRInTerminal: true,
       version: [2, 2204, 13], 
     });
+  
   
     //await start(client);
     

@@ -49,9 +49,9 @@ const {
       const { connection } = update;
       if (connection === "close") {
         console.log("closed connection =/");
-        startSock()
+        //startSock()
        
-        //process.exit();
+        process.exit();
   
 
   

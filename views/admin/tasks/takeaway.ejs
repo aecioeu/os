@@ -296,7 +296,7 @@ tbody, td, tfoot, th, thead, tr {
                       </div>
                       <!-- end row -->
                       <%if(taskSign != false){%>
-ASSINADA
+
 
                       <div class="row">
                         <div class="col-sm-12">
@@ -319,7 +319,7 @@ ASSINADA
                         <div class="col-sm-6">
                           <div class="mt-4 text-center">
                               <p><span class="fw-medium m-0 font-dark">____________________________________________</span> </p>
-                              <p><h6 class="fs-15 mt-0 mb-1"><%-data.name.toUpperCase()%> - C.P.D</h6></p>
+                              <p><h6 class="fs-15 mt-0 mb-1"><%-user.name.toUpperCase()%> - C.P.D</h6></p>
                              
                           </div>
                           <div class="clearfix"></div>
@@ -531,677 +531,149 @@ ASSINADA
  
 
     <%- include('../partials/footer') %>
+   
     <script src="/js/jquery.dataTables.min.js"></script>
-    <script src="/js/wp.init.js"></script>
     <script src="/js/masked.js"></script>
-
-    
-
+  
+    <script type="module" src="/js/takeaway.init.js"></script>
     <script>
 
-$('.created_time').text(moment($('.created_time').text()).format('DD/MM/YYYY HH:ss'))
-$('.date').text(moment().format('LL'))
-
-
-
-var table_ = $('#patrimonio_vinculado').DataTable({
-        ajax: "/api/tasks/patrimonio/<%- data.task_id %>",
-        responsive: true,
-        ordering: false,
-        searching: false,
-        language: {
-        emptyTable: "Nenhum patrimônio vinculado."
+      
+var table_ = $("#patrimonio_vinculado").DataTable({
+  ajax: "/api/tasks/patrimonio/<%- data.task_id %>",
+  responsive: true,
+  ordering: false,
+  searching: false,
+  language: {
+    emptyTable: "Nenhum patrimônio vinculado.",
+  },
+  paging: false,
+  bInfo: false,
+  columns: [
+    {
+      className: "text-center",
+      data: "registration",
+      render: function (data, type, row) {
+        return `<h6 class="fs-16 mt-0 mb-1">${row.registration}</h6>`;
+      },
     },
-        paging: false,
-        bInfo: false,
-        columns: [{
-           "className": "text-center" ,
-            "data": "registration",
-            render: function(data, type, row) {
-              return `<h6 class="fs-16 mt-0 mb-1">${row.registration}</h6>`;
-            }
-          },
-          {
-            "data": "name",
-            render: function(data, type, row) {
-              return `
+    {
+      data: "name",
+      render: function (data, type, row) {
+        return `
                      
                                         
                                        
                             <h6 class="fs-15 mt-0 mb-1">${row.name}</h6>
-                            <p class="text-muted fs-12 mb-0"><i class="uil uil-map-pin-alt text-dark"></i>${row.centro_custo}</p>
+                            <p class="text-muted fs-12 mb-0"><i class="uil uil-map-pin-alt text-dark"></i>${
+                              row.centro_custo
+                            }</p>
 
                             ${list_service(row.services)}
 
                            
                        
                             `;
-
-            }
-          },
-        ]
-
-
-      });
-    
-
-      function list_service(services){
-
-if(services){
-
-  var tpl ='<h6 class="fs-13 mt-0 mb-1 mt-2">SERVIÇO EXECUTADO.</h6>'
-
-  services.forEach(function(item, index) {
-
-   tpl += `<p class="text-muted fs-13 m-0 ">${moment(item.service_created).format('DD/MM/YYYY HH:mm')} - ${item.service}</p> `
-   if(item.description){
-    tpl +=`<p class="text-muted fs-12 m-0 "><strong>OBSERVAÇÃO: </strong>${item.description}</p>`
-   }
-
-  })
-
-  return tpl
-
-
-}else{
-  return ""
-}
-
-
-
-
-
-
-
-}
-
-$(document).on('select2:open', () => {
-            document.querySelector('.select2-search__field').focus();
-        });
-
-
-  var select = $('[data-plugin="select_servidores"]').select2({
-    ajax: {
-      url: '/api/servidores/search?',
-      dataType: 'json',
-      data: function (params) {
-        var query = {
-          term: params.term
-        }
-
-        // Query parameters will be ?search=[term]&type=public
-        return query;
-      },
-      type: "GET",
-      placeholder: "Buscar ...",
-      minimumInputLength: 3,
- 
-      processResults: function (data) {
-        return {
-          results: data
-        };
       },
     },
-    templateResult: formatRepo,
-    templateSelection: function (data) {
-        if (!data.id) {
-          return data.text;
-        }
-        return $(`<span>${data.registration} - ${data.name}</span>`);
-      },
-  })
-
-  .on('select2:open', function (e) {
-    document.querySelector('.select2-search__field').focus();
-  })
-
-
-  .on('select2:select', function (e) {
-      var data = e.params.data;
-     
-      $('.name').text(data.name)
-     
-       var contato = $("#contato").val(data.phone).mask("(99) 99999-999?9")
-       checkWhatsapp(data.phone)
-  });
-
-
-$(document).ready(function() {
-
-if($(".contato")){
-
-  $('.contato').inputmask("mask", {
-    "mask": "(99) 99999-9999",
-    showMaskOnFocus: true,
-    showMaskOnHover: false,
-    autoUnmask: true,
-    clearMaskOnLostFocus: true
+  ],
 });
 
+function list_service(services) {
+  if (services) {
+    var tpl = '<h6 class="fs-13 mt-0 mb-1 mt-2">SERVIÇO EXECUTADO.</h6>';
 
-/*$(".contato").mask("(99) 9999-9999?9").focusout(function(event) {
-  var target, phone, element;
-  target = (event.currentTarget) ? event.currentTarget : event.srcElement;
-  phone = target.value.replace(/\D/g, '');
-  element = $(target);
-  element.unmask();
-  if (phone.length > 10) {
-      element.mask("(99) 99999-999?9");
-      checkWhatsapp(phone)
+    services.forEach(function (item, index) {
+      tpl += `<p class="text-muted fs-13 m-0 ">${moment(
+        item.service_created
+      ).format("DD/MM/YYYY HH:mm")} - ${item.service}</p> `;
+      if (item.description) {
+        tpl += `<p class="text-muted fs-12 m-0 "><strong>OBSERVAÇÃO: </strong>${item.description}</p>`;
+      }
+    });
+
+    return tpl;
   } else {
-      element.mask("(99) 9999-9999?9");
+    return "";
   }
-});*/
-}
-
-});
-
-
-
-
-function formatRepo(data) {
-
-//console.log(data)
-if (data.loading) {
-  return data.text;
 }
 
 
-
-var $tpl = $(`
-            <div class="p-1">
-                <span class="location"><i class="uil uil-map-pin-alt text-dark"></i><span class="badge badge-soft-primary" style="margin-left:5px;">${data.location}</span></span>
-                <h5 class="mt-1 mb-1"><span class="text-dark bold repository__name">${data.registration} ${data.name}</span>
-                <br><span class="badge badge-soft-secondary mt-1">${data.role}</span> </h5>                                   
-            </div>
-    `)
-
-
-
-return $tpl;
-}
-
-
-async function  requestPermission(){
-/*
+async function requestPermission() {
+  /*
 await sendMessage({
      type: "text",
      message: `Você confirma a retirada de `,
      from: '553788555554@s.whatsapp.net',
    })*/
-   
-if($('[data-plugin="select_servidores"]').select2('data')[0] == undefined){
-  
- 
-  bootbox.alert("Você deve identificar quem está recebendo!", function(){ 
-    $('[data-plugin="select_servidores"]').select2('open');
-});
 
-} else if ($('[name="contato"]').length <= 9){
-  
-  
-  bootbox.alert("Você deve informar um numero de contato de quem está recebendo!", function(){ 
-    $('[name="contato"]').focus(0)
-});
-
-}else{
-
-  bootbox.confirm({
-    message: "<b><%-user.name%>, tem certeza que quer concluir esta tarefa ?",
-    buttons: {
+  if ($('[data-plugin="select_servidores"]').select2("data")[0] == undefined) {
+    bootbox.alert("Você deve identificar quem está recebendo!", function () {
+      $('[data-plugin="select_servidores"]').select2("open");
+    });
+  } else if ($('[name="contato"]').inputmask("isComplete") == false) {
+    bootbox.alert(
+      "Você deve informar um numero de contato de quem está recebendo!",
+      function () {
+        $('[name="contato"]').focus(0);
+      }
+    );
+  } else {  
+    bootbox.confirm({
+      message: "<b><%-user.name%>, tem certeza que quer concluir esta tarefa ?",
+      buttons: {
         confirm: {
-            label: 'Sim',
-            className: 'btn-success'
+          label: "Sim",
+          className: "btn-success",
         },
         cancel: {
-            label: 'Não, não tenho certeza.',
-            className: 'btn-danger'
-        }
-    },
-    callback: function (result) {
-        if(result){
-
+          label: "Não, não tenho certeza.",
+          className: "btn-danger",
+        },
+      },
+      callback: function (result) {
+        if (result) {
           //registrar quem esta assinando e finalizar como assinatura em papel
-          bootbox.alert("Aguarde alguns segundos para que o Termo de Entrega seja impresso");
+          bootbox.alert(
+            "Aguarde alguns segundos para que o Termo de Entrega seja impresso"
+          );
 
           var data = {
-          task_id: '<%- data.task_id %>',
-          id_servidor : $('[data-plugin="select_servidores"]').select2('data')[0].id,
-          sign_registration: $('[data-plugin="select_servidores"]').select2('data')[0].registration, 
-          sign_name: $('[data-plugin="select_servidores"]').select2('data')[0].name, 
-          sign_phone: $('[name="contato"]').val(),
-          sign_whatsapp: '',
-          sign_type: 'papper',
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/tasks/sign`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-
-            if(response.status == 'signed'){
-              window.location.href = '/tasks/archive/<%-data.task_id-%>'
-            }
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-        })
-
-
-
-
-          
-        }
-    }
-});
-  
-}
-
-  
-
-}
-
-
-
-
-
-
-/*
-
-
-
-
-
-          function newService(id){
-
-          //  $('#pills-service-tab').tab('show');
-          $(`[name="ref_patrimonio"] option[value="${id}"]`).prop('selected', true)
-          
-
-          $(`body .patrimonio_ref`).text($('[name="ref_patrimonio"] option:selected').text())
-       
-          $('html, body').animate({
-                    scrollTop: $('[name="ref_patrimonio"]').offset().top
-                }, 0);
-
-            $('[data-plugin="select_service"]').select2('open');
-
-          
-
-          }
-
-
-function waranty(start){
-  
-    
-
-                    if( moment().diff(start, 'days') >= 365){
-                         return `<label class="badge badge-soft-danger">Sem Garantia</label>`
-                    }else{
-                         return `<label class="badge badge-soft-success">Equipamento em Garantia</label>`
-                    }
-
-}
-
-
-
-function remove_service(services){
-
-if(services){
-
-  var tpl ='<h6 class="m-2 fs-13 mt-0 mb-1 mt-2">REMOVER SERVIÇO EXECUTADO.</h6>'
-
-  services.forEach(function(item, index) {
-  
-   tpl += `
-   <a href="javascript:void(0);" onclick="deleteService('${item.id}', '<%- data.task_id %>')" class="dropdown-item text-danger">
-                                                    <i class="uil uil-trash me-2"></i>${moment(item.created).format('DD/MM/YYYY')} - ${item.service} </a>`
-
-  })
-
-  return tpl
-
-
-}else{
-  return ""
-}
-
-
-
-
-
-
-
-}
-
-function serviceButtom(registration){
-if(`<%-data.status%>` != 'complete' && `<%-data.status%>` != 'new')  return `<button onclick="newService('${registration}')" class="btn btn-sm btn-primary float-end" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasTop">+ Serviço</button>`
-return ``
-}
-
-    
-
-
-     
-
-
-
-
-
-
-
-
-
-      HistoryLoad('<%- data.task_id %>')
-      NotesLoad('<%- data.task_id %>')
-      $('.created_time').text(moment($('.created_time').text()).format('DD/MM/YYYY HH:ss'))
-      
-
-  
-
-
-
-      function TplHistory(data){
-        $(".history li").remove()
-          data.forEach(function(item, index) {
-            
-            $(".history").append(
-              `   <li class="event-list">
-                          <div class="pb-4">
-                            <div class="d-flex">
-                              <div class="event-date text-center me-4 flex-shrink-0">
-                                <div class="bg-soft-primary p-1 rounded text-primary fs-14 created" time="${item.created}"></div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="fs-15 mt-0 mb-1">
-                                  ${item.title}
-                                </h6>
-                                <p class="text-muted fs-14">
-                                  ${item.description}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </li>`
-            );
+            task_id: "<%- data.task_id %>",
+            id_servidor: $('[data-plugin="select_servidores"]').select2(
+              "data"
+            )[0].id,
+            sign_registration: $('[data-plugin="select_servidores"]').select2(
+              "data"
+            )[0].registration,
+            sign_name: $('[data-plugin="select_servidores"]').select2("data")[0]
+              .name,
+            sign_phone: $('[name="contato"]').val(),
+            sign_whatsapp: "",
+            sign_type: "papper",
+          };
+
+          $.ajax({
+            type: "POST",
+            url: `/tasks/sign`,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            success: function (response) {
+              if (response.status == "signed") {
+                window.location.href = "/tasks/archive/<%-data.task_id-%>";
+              }
+            },
+            error: function (errMsg) {
+              alert(errMsg);
+            },
           });
-
+        }
+      },
+    });
+  }
 }
 
-function Tplnotes(data){
-  
-        $(".notes li").remove()
-          data.forEach(function(item, index) {
-
-           // console.log(moment(item.date).fromNow())
-
-
-            $('.notes').append(`<li class="position-relative">
-                                                    <hr>
-                                                    <h4><span class="badge bg-light text-dark position-absolute top-0 start-50 translate-middle">${item.date}</span></h4>
-                                                </li>`)
-
-
-
-            item.notes.forEach(function(notes, index2) {
-
-              $(".notes").append(
-              ` <li class="clearfix">
-                                            <div class="chat-avatar">
-                                                <img src="/img/profile/${notes.profile}" alt="user">
-                                                <i>${moment(notes.note_created).format('hh:mm')}</i>
-                                                
-                                            </div>
-                                            <div class="conversation-text">
-                                                <div class="ctext-wrap">
-                                                    <i class="fs-15">${notes.tecnico_name}</i>
-                                                    <p class="fs-14">${notes.description}</p>
-                                                </div>
-                                                
-                                                
-                                            </div>
-                </li>`
-            );
-            
-            })
-
-     
-          });
-
-}
-
-      function HistoryLoad(task_id) {
-        $.ajax({
-          type: "GET",
-          url: `/api/tasks/history/${task_id}`,
-          // dataType: "json", 
-          //contentType: "application/json; charset=utf-8",
-          success: function(response) {
-            TplHistory(response)
-            timeFromNow()
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-      }
-
-      function NotesLoad(task_id) {
-        $.ajax({
-          type: "GET",
-          url: `/api/tasks/notes/${task_id}`,
-          // dataType: "json", 
-          //contentType: "application/json; charset=utf-8",
-          success: function(response) {
-
-           if(response) Tplnotes(response)
-            //TplHistory(response)
-          //  timeFromNow()
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-      }
-
-
-      $("#services").submit(function(e) {
-        e.preventDefault();
-
-           
-        var data = {
-          task_id: '<%- data.task_id %>',
-          id_service: $('[data-plugin="select_service"]').select2('data')[0].name, 
-          id_patrimonio: $('[name="ref_patrimonio"]').val(),
-          description: $("textarea#service").val()
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/tasks/services`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-
-            if(response.status == 'added'){
-
-              
-
-              $('#patrimonio_vinculado').DataTable().ajax.reload();
-              //$('#pills-tasks-tab').tab('show');
-              //Reseta o select
-              
-              
-              $('[data-plugin="select_service"]').val('').trigger('change')
-              $('#offcanvasRight').offcanvas('hide');
-
-              HistoryLoad('<%- data.task_id %>')
-             // $(`[name="ref_patrimonio"] option[value="${id}"]`).prop('selected', true)
-             setTimeout(() => {
-              $('html, body').animate({
-                    scrollTop: $('#patrimonio_vinculado').offset().top
-                }, 0);
-             }, 300);
-
-             
-           
-
-            
-
-              //patrimonio_vinculado_wrapper
-
-              //alert("Nota inserida.")
-              //$("textarea#description").val('')
-             // NotesLoad('<%- data.task_id %>')
-            }
-
-            
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-
-
-
-    })
-
-
-
-      $("#notes").submit(function(e) {
-        e.preventDefault();
-
-           
-        var data = {
-          task_id: '<%- data.task_id %>',
-          description: $("textarea#description").val()
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/tasks/note`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-
-            if(response.status == 'added'){
-              //alert("Nota inserida.")
-              $("textarea#description").val('')
-              NotesLoad('<%- data.task_id %>')
-            }
-
-            
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-
-
-
-
-
-    })
-
-      
-
-      function timeFromNow() {
-        $('[time]').each(function(i, obj) {
-
-          $(this).text(moment($(this).attr("time")).fromNow())
-
-        });
-      }
-
-      timeFromNow()
-      setInterval(() => {
-        timeFromNow()
-      }, 1000);
-
-      function deletePatrimonio(id_patrimonio, task_id) {
-
-        var data = {
-          id: id_patrimonio,
-          task_id: task_id
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/api/patrimonio/delete`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-            $('#patrimonio_vinculado').DataTable().ajax.reload();
-            HistoryLoad('<%- data.task_id %>')
-
-            //Se a solicitação for feita com sucesso, a resposta representará os dados
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-      }
-
-
-      function deleteService(id_service, task_id) {
-
-        //deleteService('${item.id}', '<%- data.task_id %>')
-
-        var data = {
-          id: id_service,
-          task_id: task_id
-        }
-
-        $.ajax({
-          type: "POST",
-          url: `/api/services/delete`,
-          dataType: "json",
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(data),
-          success: function(response) {
-            $('#patrimonio_vinculado').DataTable().ajax.reload();
-            HistoryLoad('<%- data.task_id %>')
-
-            //Se a solicitação for feita com sucesso, a resposta representará os dados
-
-          },
-          error: function(errMsg) {
-            alert(errMsg);
-          }
-
-
-        })
-        }*/
 
     </script>
 

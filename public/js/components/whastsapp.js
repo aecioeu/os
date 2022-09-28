@@ -1,4 +1,4 @@
-
+console.log('funcoes whats')
 
 const sendMessage = async (data) => {
     const response = await fetch("/api/whatsapp/send", {
@@ -9,7 +9,7 @@ const sendMessage = async (data) => {
       },
     });
     let respData = await response.json(); //extract JSON from the http response
-    console.log(data);
+    //console.log(data);
   };
   
   const sendButtonMessage = async (data) => {

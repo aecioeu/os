@@ -764,6 +764,14 @@ router.post("/create/patrimonio", async function (req, res) {
 
 
 
+router.get("/show/archive", isLoggedIn, async function (req, res, next) {
+  const status = req.params.status;
+  res.render("admin/tasks_archive.ejs", {
+    user : req.user,
+    status: status
+  });
+});
+
 router.get("/show/:status", isLoggedIn, async function (req, res, next) {
   const status = req.params.status;
   res.render("admin/tasks.ejs", {
@@ -771,6 +779,8 @@ router.get("/show/:status", isLoggedIn, async function (req, res, next) {
     status: status
   });
 });
+
+
 
 
 module.exports = router;

@@ -34,6 +34,94 @@ const getTask = async (data) => {
 };
 
 
+const getTaskArchive222 = async (data) => {
+
+  if(data.show == 'false') data.show = 'new'
+
+  let rows = await pool.query(`Select
+  *,
+  tasks.created as created_task
+  From
+  tasks Inner Join
+  servidores On servidores.id = tasks.id_servidor WHERE status = ? AND task_id LIKE ? AND (tasks.created BETWEEN ? AND ?) ORDER BY tasks.priority ASC, tasks.created DESC`, 
+  [data.show, `%${data.term}%`, data.start, data.end]);
+ 
+  if (rows.length > 0) {
+
+    const tasks = [] 
+
+    for (const row of rows) {
+      var tecnico = await getTasktecnicos(row.task_id)
+      row.tecnico = tecnico
+      tasks.push(row)
+    }
+  
+  return tasks
+
+  }else return false;
+ 
+ /* if (rows.length > 0) return   res.json(rows);
+  return res.json({status: "Sorry! Not found."});*/
+
+};
+
+
+const getTaskArchive = async (data) => {
+  console.log('arquivo')
+
+
+ 
+let rows = await pool.query(`Select
+  *,
+  tasks.updated as updated_task
+  From
+  tasks Inner Join
+  servidores On servidores.id = tasks.id_servidor WHERE status = ? AND (task_id LIKE ? OR servidores.name LIKE ?) AND (tasks.created BETWEEN ? AND ?) ORDER BY  tasks.updated DESC`, 
+  ['archive', `%${data.term}%`,`%${data.term}%`, data.start, data.end]);
+   if (rows.length > 0) {
+
+    const tasks = [] 
+
+    for (const row of rows) {
+      var tecnico = await getTasktecnicos(row.task_id)
+      row.tecnico = tecnico
+      tasks.push(row)
+    }
+
+   const data = tasks
+
+   console.log(data)
+   // this gives an object with dates as keys
+   const groups = data.reduce((groups, game) => {
+   
+     const date = game.updated_task.toLocaleDateString();
+     if (!groups[date]) {
+       groups[date] = [];
+     }
+     groups[date].push(game);
+     return groups;
+   }, {});
+   
+   // Edit: to add it in the array format instead
+   const groupArrays = Object.keys(groups).map((date) => {
+     return {
+       date,
+       tasks: groups[date]
+     };
+   });
+   
+
+
+   return groupArrays;
+
+   }else{
+     return false;
+   }
+  
+
+ };
+
+
 const getMyTask = async (data) => {
 
 
@@ -338,12 +426,13 @@ const getServidor = async (id_servidor) => {
   
 
   module.exports = {
-    getTaskSign,
+  getTaskSign,
   getService,
   getPatrimonioServicebyTask,
   getMyTask,
   getTaskCount,
   getTasktecnicos,
+  getTaskArchive,
   getTask,
   updateTaskDate, 
   getNotesHistory,

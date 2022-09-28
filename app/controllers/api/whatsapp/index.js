@@ -32,6 +32,7 @@ router.post('/check', async function (req, res) {
 
  }else{
   console.log('algum erro ocorreu ao buscar 55' + number)
+  console.log(result)
   return res.status(200).json({
     status: result,
     message: "Não existe",
@@ -72,7 +73,7 @@ router.post("/send", async function (req, res, next) {
     const body = req.body
     console.log(body)
 
-        await sendMsg(
+       const msg =  await sendMsg(
                 {
                 type: body.type,
                 message: body.message,

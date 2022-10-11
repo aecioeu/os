@@ -132,7 +132,7 @@ const flatpickr = $("#range-datepicker").flatpickr({
     moment(new Date()).subtract(7, "days").format("DD/MM/YYYY"),
     moment(new Date()).format("DD/MM/YYYY"),
   ],
-  onChange: function (selectedDates, dateStr, instance) {
+  onClose: function (selectedDates, dateStr, instance) {
     initTasks(selectedDates);
   },
   onReady: function (selectedDates, dateStr, instance) {

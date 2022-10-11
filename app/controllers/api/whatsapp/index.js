@@ -34,7 +34,9 @@ router.post('/check', async function (req, res) {
   console.log('algum erro ocorreu ao buscar 55' + number)
   console.log(result)
   return res.status(200).json({
-    status: result,
+    status: {
+      exists : false
+    },
     message: "Não existe",
   });
  }

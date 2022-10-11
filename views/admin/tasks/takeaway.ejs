@@ -395,11 +395,10 @@ tbody, td, tfoot, th, thead, tr {
                             <i class="uil uil-print me-1"></i> Imprimir Termo de Entrega</a>
                            
                             <a href="/tasks/edit/<%-data.task_id-%>" class="btn btn-soft-dark">Editar Tarefa</a>
-                            <%if(data.status == "complete" && taskSign == false){%>
-                              <%if(data.type != "out"){%>
+                            <%if(data.status == "complete"){%>
+                             
                                 <button onclick="requestPermission()" class="btn btn-danger">Concluir e Arquivar esta Tarefa</button>
-                                 
-                              <% }   %>
+                         
                               <% }   %>
                                   
     
@@ -535,7 +534,7 @@ tbody, td, tfoot, th, thead, tr {
     <script src="/js/jquery.dataTables.min.js"></script>
     <script src="/js/masked.js"></script>
   
-    <script type="module" src="/js/takeaway.init.js"></script>
+    <script type="module" src="/js/takeaway.init.js?v=<%-Date.now()%>"></script>
     <script>
 
       
@@ -606,8 +605,11 @@ await sendMessage({
      message: `Você confirma a retirada de `,
      from: '553788555554@s.whatsapp.net',
    })*/
+   if($('[data-plugin="select_servidores"]').select2("data")){
 
-  if ($('[data-plugin="select_servidores"]').select2("data")[0] == undefined) {
+   
+
+  if ($('[data-plugin="select_servidores"]').select2("data").length == 0) {
     bootbox.alert("Você deve identificar quem está recebendo!", function () {
       $('[data-plugin="select_servidores"]').select2("open");
     });
@@ -634,10 +636,7 @@ await sendMessage({
       callback: function (result) {
         if (result) {
           //registrar quem esta assinando e finalizar como assinatura em papel
-          bootbox.alert(
-            "Aguarde alguns segundos para que o Termo de Entrega seja impresso"
-          );
-
+         
           var data = {
             task_id: "<%- data.task_id %>",
             id_servidor: $('[data-plugin="select_servidores"]').select2(
@@ -672,6 +671,28 @@ await sendMessage({
       },
     });
   }
+}else{
+
+bootbox.confirm({
+  message: "<b><%-user.name%>, tem certeza que quer concluir esta tarefa ?",
+  buttons: {
+    confirm: {
+      label: "Sim",
+      className: "btn-success",
+    },
+    cancel: {
+      label: "Não, não tenho certeza.",
+      className: "btn-danger",
+    },
+  },
+  callback: function (result) {
+    if (result) {
+      window.location.href = "/tasks/archive/<%-data.task_id-%>";
+    }
+  },
+});
+
+}
 }
 
 

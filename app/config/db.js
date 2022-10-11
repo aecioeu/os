@@ -9,10 +9,10 @@ const getTask = async (data) => {
   let rows = await pool.query(`Select
   *,
   tasks.created as created_task
-  From
-  tasks Inner Join
-  servidores On servidores.id = tasks.id_servidor WHERE status = ? AND task_id LIKE ? AND (tasks.created BETWEEN ? AND ?) ORDER BY tasks.priority ASC, tasks.created DESC`, 
-  [data.show, `%${data.term}%`, data.start, data.end]);
+  From tasks 
+  INNER JOIN servidores ON servidores.id = tasks.id_servidor 
+  WHERE status = ? AND (task_id LIKE ? OR servidores.name LIKE ?) AND (tasks.created BETWEEN ? AND ?) ORDER BY tasks.priority ASC, tasks.created DESC`, 
+  [data.show, `%${data.term}%`, `%${data.term}%`, data.start, data.end]);
  
   if (rows.length > 0) {
 
@@ -23,6 +23,8 @@ const getTask = async (data) => {
       row.tecnico = tecnico
       tasks.push(row)
     }
+
+    console.log(tasks)
   
   return tasks
 
@@ -67,7 +69,9 @@ const getTaskArchive222 = async (data) => {
 
 
 const getTaskArchive = async (data) => {
-  console.log('arquivo')
+
+  console.log(data)
+ 
 
 
  
@@ -76,7 +80,7 @@ let rows = await pool.query(`Select
   tasks.updated as updated_task
   From
   tasks Inner Join
-  servidores On servidores.id = tasks.id_servidor WHERE status = ? AND (task_id LIKE ? OR servidores.name LIKE ?) AND (tasks.created BETWEEN ? AND ?) ORDER BY  tasks.updated DESC`, 
+  servidores On servidores.id = tasks.id_servidor WHERE status = ? AND (task_id LIKE ? OR servidores.name LIKE ?) AND tasks.updated BETWEEN ? AND ? ORDER BY  tasks.updated DESC`, 
   ['archive', `%${data.term}%`,`%${data.term}%`, data.start, data.end]);
    if (rows.length > 0) {
 
@@ -90,7 +94,7 @@ let rows = await pool.query(`Select
 
    const data = tasks
 
-   console.log(data)
+
    // this gives an object with dates as keys
    const groups = data.reduce((groups, game) => {
    
@@ -317,6 +321,20 @@ const getTaskData = async (task_id) => {
  
   };
 
+  const getTecnico = async (task_id) => {
+
+    let rows = await pool.query(`SELECT * FROM task_tecnico WHERE task_id = ? ORDER BY created DESC`, [task_id]);
+    if (rows.length > 0) return rows;
+    return false;
+   
+   /* if (rows.length > 0) return   res.json(rows);
+    return res.json({status: "Sorry! Not found."});*/
+ 
+  };
+
+
+
+
   
   const getTaskSign = async (task_id) => {
 
@@ -392,12 +410,37 @@ const getServidor = async (id_servidor) => {
   };
 
 
-  const getTecnico = async (id_tecnico) => {
+  const getActiveTecnicos = async () => {
 
-    let rows = await pool.query("SELECT * FROM tecnicos WHERE id = ?", [id_servidor]);
-    if (rows.length > 0) return rows;
-    return false;
+    let rows = await pool.query("SELECT * FROM tecnicos WHERE active = '1'");
+    //if (rows.length > 0) return rows;
+    
+    var tecnicos = []
+    
+    if(rows.length > 0){
+      //getTaskData
+
+      rows.forEach(function(item) {
+      
+        tecnicos.push({
+          value : item.name,
+          uid: item.id,
+          image: `/img/profile/${item.profile}`
+        })
+    
+
+      
+       // do something with `item`
+      });
+      
+      return tecnicos
+      
+    }else return false;
    
+
+
+    
+    
    /* if (rows.length > 0) return   res.json(rows);
     return res.json({status: "Sorry! Not found."});*/
  
@@ -426,6 +469,7 @@ const getServidor = async (id_servidor) => {
   
 
   module.exports = {
+    getActiveTecnicos,
   getTaskSign,
   getService,
   getPatrimonioServicebyTask,

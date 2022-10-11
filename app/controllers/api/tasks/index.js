@@ -34,7 +34,7 @@ router.post('/archive', async function (req, res) {
   const dados = req.body
   var data = {
     show: req.body.show,
-    start: moment(req.body.start).format("YYYY-MM-DD 00:00:00"),
+    start: moment(req.body.start).format("YYYY-MM-DD 00:00:01"),
     end: moment(req.body.end).format("YYYY-MM-DD 23:59:59"),
     term: req.body.term
   };

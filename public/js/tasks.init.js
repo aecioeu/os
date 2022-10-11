@@ -57,7 +57,12 @@ var select = $('[data-plugin="select_servidores"]')
 
 
   if ($(".contato").length) {
- 
+
+    $('.contato').blur(function() {
+      checkWhatsapp($(".contato").val());
+    });
+
+  
     $('.contato').inputmask("mask", {
         "mask": "(99) 99999-9999",
         showMaskOnFocus: true,
@@ -66,9 +71,10 @@ var select = $('[data-plugin="select_servidores"]')
         clearMaskOnLostFocus: true,
         greedy: false,
         oncomplete : function () {
-
+          console.log('completo')
           checkWhatsapp($(".contato").val());
-        }
+        },
+   
     });
     
   }
@@ -129,7 +135,7 @@ const flatpickr = $("#range-datepicker").flatpickr({
   mode: "range",
   dateFormat: "d/m/Y",
   defaultDate: [
-    moment(new Date()).subtract(7, "days").format("DD/MM/YYYY"),
+    moment(new Date()).subtract(30, "days").format("DD/MM/YYYY"),
     moment(new Date()).format("DD/MM/YYYY"),
   ],
   onChange: function (selectedDates, dateStr, instance) {

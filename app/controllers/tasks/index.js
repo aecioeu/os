@@ -60,12 +60,14 @@ async function lembrete() {
             );
             
 
+           
+
             await sendMsg(
               {
                 type: "text",
-                message: `*Lembrete !*, *${capitalizeFirstLetter(
+                message: `*Este é um Lembrete automático do CPD!*, *${capitalizeFirstLetter(
                   solicitante[0].toLowerCase()
-                )}*, você ainda não buscou os itens 😅 aqui no CPD.
+                )}*, você ainda não buscou seus itens  que estão aqui 😅.
                     \n${tpl}
                     \nJá estão prontos 🥳, aguardando sua retirada.
                     \n*Providencie a retirada o mais breve possivel.*
@@ -222,22 +224,19 @@ router.post("/create", isLoggedIn, async function (req, res) {
      
       if (dados.notify == 'on') {
         try {
-           sendMsg(
-            {
-              type: "text",
-              message: `Oi 👋 *${capitalizeFirstLetter(
-                solicitante[0].toLowerCase()
-              )}* tudo bem ? \nAqui é do CPD da Prefeitura.
-              \nFoi gerada uma nova tarefa *#${task_id}* para ${(dados.tipo == 'in') ? `*Manutenção de Equimanetos*` :` *Auxilio ao Usuário*`}.
-              \nProblema relatado:
-              \n_${dados.problem}_
-              \n☝️ Fique atento pois as notificações desta tarefa vão chegar por aqui.
-              \n_👉Mensagem automática, não é necessario responder._
-              `,
-              from: data[0].whatsapp,
-            },
-            client
-          );
+
+          let message = await client.sendMessage(data[0].whatsapp, { text: `Oi 👋 *${capitalizeFirstLetter(
+            solicitante[0].toLowerCase()
+          )}* tudo bem ? \nAqui é do CPD da Prefeitura.
+          \nFoi gerada uma nova tarefa *#${task_id}* para ${(dados.tipo == 'in') ? `*Manutenção de Equimanetos*` :` *Auxilio ao Usuário*`}.
+          \nProblema relatado:
+          \n_${dados.problem}_
+          \n☝️ Fique atento pois as notificações desta tarefa vão chegar por aqui.
+          \n_👉Mensagem automática, não é necessario responder._
+          ` })
+          
+          console.log(message)
+
         } catch (error) {console.log("erro ao enviar")}
       }
 
@@ -286,11 +285,10 @@ router.post("/edit", isLoggedIn, async function (req, res) {
     data.status = "pendding";
   }
 
-  await pool.query("UPDATE servidores SET phone = ? WHERE id = ?", [
-    dados.contato,
-    dados.servidor,
-  ]);
-
+  await pool.query(
+    "UPDATE servidores SET phone = ? , whatsapp = ? WHERE id = ?",
+    [dados.contato, dados.whatsapp, dados.servidor]
+  );
   await pool.query(
     "UPDATE tasks SET ? WHERE task_id = ?",
     [data, task_id],
@@ -557,7 +555,18 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
       if (data[0].notification == 'on') {
       try {
         if(data[0].type == 'in'){
-          sendMsg(
+          let message  = await client.sendMessage( data[0].whatsapp, { text: `*${capitalizeFirstLetter(
+            solicitante[0].toLowerCase()
+          )}*, o CPD da Prefeitura tem um *recado importante para você*.
+      \nOs patrimônios:
+      \n${tpl}
+      \nJá estão prontos 🥳, aguardando sua retirada.
+      \n*Providencie a retirada o mais breve possivel.*
+      \n\n_👉Mensagem automática, não é necessario responder._
+      ` })
+
+          console.log(message)
+       /*   sendMsg(
             {
               type: "text",
               message: `*${capitalizeFirstLetter(
@@ -572,7 +581,7 @@ router.get("/complete/:task_id", isLoggedIn, async function (req, res) {
               from: data[0].whatsapp,
             },
             client
-          );
+          );*/
         }
 
       
@@ -628,8 +637,17 @@ router.get("/archive/:task_id", isLoggedIn, async function (req, res) {
       //console.log(data[0].whatsapp, capitalizeFirstLetter(solicitante.toLowerCase(),data[0].task_id)
 
       try {
- 
-          await sendMsg(
+
+        let message  = await client.sendMessage(data[0].whatsapp, { text: `*${capitalizeFirstLetter(
+          solicitante[0].toLowerCase()
+        )}*, o CPD da Prefeitura tem um recado importante para você.
+    \nA solicitação *#${data[0].task_id}* foi finalizada.
+    \nFoi um prazer atendê-lo 😄. Caso tenha alguma outra dúvida, não hesite em nos procurar novamente!
+    \nAté mais e bom trabalho!
+    \n\n_👉Mensagem automática, não é necessario responder._
+    ` })
+        console.log(message)
+          /*await sendMsg(
             {
               type: "text",
               message: `*${capitalizeFirstLetter(
@@ -643,12 +661,12 @@ router.get("/archive/:task_id", isLoggedIn, async function (req, res) {
               from: data[0].whatsapp,
             },
             client
-          );
+          );*/
  
 
       
       } catch (error) {
-        console.log("erro ao enviar");
+        console.log("erro ao enviar" , error);
       }
     }
 
@@ -684,6 +702,8 @@ router.get("/view/:task_id", async function (req, res) {
   const data = await db.getTaskData(task_id);
   const taskHistory = await db.getTaskHistory(task_id);
   const taskTecnico = await db.getTasktecnicos(task_id);
+  const mention = await db.getActiveTecnicos()
+  console.log(mention)
 
   var assingned = false;
   if (taskTecnico) {
@@ -697,6 +717,7 @@ router.get("/view/:task_id", async function (req, res) {
     task_history: taskHistory,
     task_tecnico: taskTecnico,
     assigned: assingned,
+    mentions: mention
   });
 });
 

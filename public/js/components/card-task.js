@@ -146,11 +146,11 @@ function tpltedate(row, time) {
                                   <i class="uil uil-clipboard-alt"></i> #${row.task_id} 
                               </span>
                           </li>
-                          <li class="list-inline-item ">
+                         <li class="list-inline-item ">
                               <span class="text-muted d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Due date">
                                   <i class="uil uil-calender me-1"></i> ${moment(
-      row.created_task
-    ).fromNow()}
+      row.updated
+    ).format('HH:mm')}
                               </span>
                           </li>
                           <li style="display: contents;">

@@ -35,6 +35,10 @@ const sendMessage = async (data) => {
       },
     });
     let respData = await response.json(); //extract JSON from the http response
+
+    console.log(respData)
+  if(respData){
+
   
     if (respData.status.exists == true) {
       $(".input-group-text").text("✔️");
@@ -44,6 +48,7 @@ const sendMessage = async (data) => {
       $("#whatsapp").val()
     }
   };
+}
   
   export {
     sendButtonMessage,
